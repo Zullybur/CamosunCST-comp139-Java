@@ -5,7 +5,8 @@ public class Intersection {
     protected Signal N, S, W, E;
     protected int state = 0;
     /**
-     * Default constructor for the Intersection class.
+     * Default constructor for the Intersection class, which models a four-way
+     * intersection where N,S and E,W signals remain in sync.
      * <p>
      * Preconditions:   N/A.<br>
      * Postconditions:  N, S, E, and W Signal objects are created<br>
