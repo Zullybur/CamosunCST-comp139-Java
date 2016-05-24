@@ -14,7 +14,7 @@ public class CallRequestList
 {
     private static final String UP = "UP";
     private static final String DOWN = "DOWN";
-    private LinkedList<Integer> destinationList;
+    private LinkedList<CallButton> destinationList;
     private String direction;
     
     /**
@@ -44,11 +44,12 @@ public class CallRequestList
     {
         ListIterator i = destinationList.listIterator();
         while (i.hasNext()) {
-            int floorID = (int)i.next();
-            if (isValidFloor(floorID, e.getCurrentFloor()))
+            CallButton callBtn;
+            callBtn = (CallButton) i.next();
+            if (isValidFloor(callBtn, e))
             {
                 try {
-                    e.addFloor(floorID);
+                    e.addServiceRequest(callBtn);
                     i.remove();
                 } catch (IllegalArgumentException ex) {
                     // crash prevention - i.remove() fails if exception is thrown
@@ -57,7 +58,7 @@ public class CallRequestList
             }
         }
     }
-    
+
     /**
      * Check if floorID should be added to an elevator's destination list.
      * @param floorID is the integer representing the floor being checked
@@ -65,24 +66,28 @@ public class CallRequestList
      * @return true if the elevator is going up and the floor is above it, or
      * if the elevator is going down and the floor is below it
      */
-    private boolean isValidFloor(int floorID, int currentFloor)
+    private boolean isValidFloor(CallButton callBtn, Elevator e)
     {
-        if (direction.equals(UP))
+        if (direction.equals(UP) && e.getDirection() == 1)
         {
-            return floorID > currentFloor;
-        } else {
-            return floorID < currentFloor;
+            return callBtn.getFloorID() > e.getCurrentFloor();
+        } else if (direction.equals(DOWN) && e.getDirection() == -1) {
+            return callBtn.getFloorID() < e.getCurrentFloor();
+        } else if (e.getDirection() == 0) {
+            return true;
         }
+        return false;
     }
     
     /**
      * Add a floor to the destination list.
      * PRE: The floorID does not already have an active call button for this direction
      * POST: The floorID is added to the list of floors requesting service
-     * @param floorID is the ID of the floor to add.
+     * @param callBtn is the call button requesting service
      */
-    public void addDestination(int floorID)
+    public void addDestination(CallButton callBtn)
     {
-        destinationList.add(floorID);
+        destinationList.add(callBtn);
+        callBtn.activate();
     }
 }

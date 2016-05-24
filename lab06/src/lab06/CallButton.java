@@ -26,6 +26,8 @@ public class CallButton {
         if (direction.equals(UP) || direction.equals(DOWN))
         {
             this.direction = direction;
+        } else {
+            throw new IllegalArgumentException();
         }
         isActive = false;
         this.floorID = floorID;
