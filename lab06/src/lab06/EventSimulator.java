@@ -6,9 +6,14 @@ package lab06;
  * Created: 23 May 2016
  */
 public class EventSimulator implements EventSimulatorInterface {
-    public EventSimulator(int numFloors)
+    ElevatorSystem es;
+    public EventSimulator(int numFloors) throws IllegalArgumentException
     {
-        
+        if (numFloors < 2)
+        {
+            throw new IllegalArgumentException();
+        }
+        es = new ElevatorSystem(numFloors, 0, true, 1);
     }
     /**
      * LIGHTS
@@ -25,8 +30,10 @@ public class EventSimulator implements EventSimulatorInterface {
      * @return true if the button is lit, false otherwise
      * @throws IllegalArgumentException if numFloors is invalid
      */
-    public boolean isDownCallButtonLit(int floor) throws IllegalArgumentException {
-        
+    @Override
+    public boolean isDownCallButtonLit(int floor) throws IllegalArgumentException
+    {
+        return es.isCallButtonLightLit(floor, "DOWN");
     }
 
     /**
@@ -40,9 +47,10 @@ public class EventSimulator implements EventSimulatorInterface {
      * @return true if the button is lit, false otherwise
      * @throws IllegalArgumentException if numFloors is invalid
      */
+    @Override
     public boolean isUpCallButtonLit(int floor) throws IllegalArgumentException
     {
-        
+        return es.isCallButtonLightLit(floor, "UP");
     }
 
     /**
@@ -58,9 +66,10 @@ public class EventSimulator implements EventSimulatorInterface {
      * @return true if the button is lit, false otherwise
      * @throws IllegalArgumentException if numFloors is invalid
      */
+    @Override
     public boolean isTargetButtonLit(int floor) throws IllegalArgumentException
     {
-        
+        return es.isElevatorButtonLightLit(floor, 1);
     }
 
     /**
@@ -76,9 +85,10 @@ public class EventSimulator implements EventSimulatorInterface {
      *
      * @return true if the door is open, false otherwise
      */
+    @Override
     public boolean isElevatorDoorOpen()
     {
-        
+        return es.isElevatorDoorOpen(1);
     }
     
     /**
@@ -93,9 +103,10 @@ public class EventSimulator implements EventSimulatorInterface {
      * @return true if the door is open, false otherwise
      * @throws IllegalArgumentException if numFloors is invalid
      */
+    @Override
     public boolean isFloorDoorOpen(int floor) throws IllegalArgumentException
     {
-        
+        return es.isFloorDoorOpen(floor, 0);
     }
 
     /**
@@ -111,9 +122,10 @@ public class EventSimulator implements EventSimulatorInterface {
      *
      * @return the floor at which the elevator is located
      */
+    @Override
     public int getCurrentElevatorFloor()
     {
-        
+        return es.getElevatorLocation(1);
     }
     
     /**
@@ -131,9 +143,10 @@ public class EventSimulator implements EventSimulatorInterface {
      * @param floor the floor where the call is to be made
      * @throws IllegalArgumentException if numFloors is invalid
      */
+    @Override
     public void callElevatorDown(int floor) throws IllegalArgumentException
     {
-        
+        es.callElevator(floor, "DOWN");
     }
 
     /**
@@ -147,9 +160,10 @@ public class EventSimulator implements EventSimulatorInterface {
      * @param floor the floor where the call is to be made
      * @throws IllegalArgumentException if numFloors is invalid
      */
+    @Override
     public void callElevatorUp(int floor) throws IllegalArgumentException
     {
-        
+        es.callElevator(floor, "UP");
     }
     
      /**
@@ -163,9 +177,10 @@ public class EventSimulator implements EventSimulatorInterface {
      * @param floor the floor that is selected
      * @throws IllegalArgumentException if numFloors is invalid
      */
+    @Override
     public void selectFloor(int floor) throws IllegalArgumentException
     {
-        
+        es.selectFloor(floor, 0);
     }
     
     /**
@@ -176,8 +191,9 @@ public class EventSimulator implements EventSimulatorInterface {
      * immediately if there is an outstanding elevator request. Otherwise,
      * this method does nothing. 
      */
+    @Override
     public void tick()
     {
-        
+        es.tick();
     }
 }

@@ -61,7 +61,8 @@ public class EventSimulatorInterfaceTest {
     public void testInvalidTargetButton() {
         exception.expect(IllegalArgumentException.class);
         EventSimulatorInterface simulator = new EventSimulator(10);
-        simulator.selectFloor(10);
+        // Adjusted max floor to account for no floor zero
+        simulator.selectFloor(11);
     }
 
     @Test
@@ -87,7 +88,8 @@ public class EventSimulatorInterfaceTest {
         assertEquals(false, simulator.isTargetButtonLit(7));
         assertEquals(false, simulator.isFloorDoorOpen(7));
         assertEquals(false, simulator.isElevatorDoorOpen());
-        assertEquals(0, simulator.getCurrentElevatorFloor());
+        // Bottom floor is 1, not zero :)
+        assertEquals(1, simulator.getCurrentElevatorFloor());
 
         // Person on floor 7 wants to go down
         simulator.callElevatorDown(7);
@@ -96,7 +98,8 @@ public class EventSimulatorInterfaceTest {
         assertEquals(false, simulator.isTargetButtonLit(7));
         assertEquals(false, simulator.isFloorDoorOpen(7));
         assertEquals(false, simulator.isElevatorDoorOpen());
-        assertEquals(0, simulator.getCurrentElevatorFloor());
+        // Bottom floor is 1, not zero :)
+        assertEquals(1, simulator.getCurrentElevatorFloor());
 
         // Here we go...
         for (int i = 1; i < 7; i++) {

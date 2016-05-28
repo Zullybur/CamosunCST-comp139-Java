@@ -14,14 +14,14 @@ public class DestinationList
 {
     private static final String UP = "UP";
     private static final String DOWN = "DOWN";
-    // private or public? serialize for PQ?
+    
     protected class Destination {
         int floorID;
         String direction;
         
         private Destination(int floorID, String direction) throws IllegalArgumentException
         {
-            if (direction.equals(UP) || direction.equals(DOWN))
+            if (direction.equals(UP) || direction.equals(DOWN) || direction.equals("null"))
             {
                 this.direction = direction;
             } else {
@@ -95,6 +95,6 @@ public class DestinationList
                 return upwardDestinations.poll();
             }
         }
-        return new Destination(0, null);
+        return new Destination(0, "null");
     }
 }

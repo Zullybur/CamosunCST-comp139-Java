@@ -14,7 +14,11 @@ public class ButtonLight
     private boolean isLit;
     
     /**
-     * Instantiate a button light in the OFF state.
+     * Instantiate a button light in the OFF state.<br>
+     * 
+     * PRE: N/A<br>
+     * POST: The light for the button was created in the OFF state<br>
+     * Cleanup: N/A<br>
      */
     public ButtonLight()
     {
@@ -22,9 +26,12 @@ public class ButtonLight
     }
     
     /**
-     * Change the button light state to ON.
-     * PRE: The button is in the OFF state
-     * POST: The button was set to ON
+     * Change the button light state to ON.<br>
+     * 
+     * PRE: The button is in the OFF state<br>
+     * POST: The button was set to ON<br>
+     * Cleanup: N/A
+     * 
      */
     public void turnOn()
     {

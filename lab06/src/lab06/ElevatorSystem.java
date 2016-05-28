@@ -2,6 +2,8 @@
  */
 package lab06;
 
+import java.util.Stack;
+
 /**
  * An elevator system controller.
  * @author MattCasiro
@@ -19,6 +21,7 @@ public class ElevatorSystem {
     private CallRequestList upRequestList;
     private CallRequestList downRequestList;
     private Door[][] outerDoors;
+    private Stack<Door> openDoors;
     private CallButton[] upButtonList;
     private CallButton[] downButtonList;
     private Elevator[] elevators;
@@ -48,10 +51,14 @@ public class ElevatorSystem {
         this.bottomFloor = (offset != 0) ? -offset : 1;
         upRequestList = new CallRequestList(UP);
         downRequestList = new CallRequestList(DOWN);
+        // Add one to account for ignoring floor zero
+        upButtonList = new CallButton[topFloor + offset + 1];
+        downButtonList = new CallButton[topFloor + offset + 1];
         setCallButtons(upButtonList, UP);
         setCallButtons(downButtonList, DOWN);
         createDoors();
         createElevators(numFloors, numSubFloors);
+        openDoors = new Stack<>();
     }
     
     /**
@@ -60,8 +67,6 @@ public class ElevatorSystem {
     private void setCallButtons(CallButton[] buttonList, String direction)
     {
         int tmp = topFloor + offset;
-        // Add one to account for ignoring floor zero
-        buttonList = new CallButton[tmp + 1];
         for (int i = 0, j = offset; i <= tmp; i++)
         {
             // No up button on highest floor
@@ -95,13 +100,15 @@ public class ElevatorSystem {
     private void createDoors()
     {
         int tmp = topFloor + offset;
+        // Add one to account for no floor zero or shaft zero
+        outerDoors = new Door[tmp + 1][numShafts + 1];
         // instantiate Doors in nested loops (Floors -> Shafts)
         for (int i = 0, j = offset; i <= tmp; i++)
         {
             // Skip floor zero (and thirteen if required)
             if ((i - offset == 0) || (!hasThirteen && i == 13)) continue;
             
-            for (int s = 1; s <= numShafts; s++)
+            for (int s = 0; s < numShafts; s++)
             {
                 // Generate labels for each door in the system
                 String name;
@@ -129,33 +136,134 @@ public class ElevatorSystem {
     {
         elevators = new Elevator[numShafts];
         
-        for (int s = 1; s <= numShafts; s++)
+        for (int s = 0; s < numShafts; s++)
         {
             elevators[s] =  new Elevator(numFloors, numSubFloors, hasThirteen);
         }
     }
     
     /**
-     * Call an elevator to service the specified floor
-     * @param callBtn
+     * 
+     * @param floor
+     * @param shaft
+     * @return 
      */
-    public void callElevator(CallButton callBtn)
+    public boolean isFloorDoorOpen(int floor, int shaft) throws IllegalArgumentException
     {
-        if (callBtn.getDirection().equals(UP))
+        if (bottomFloor > floor || floor > topFloor ||
+            shaft < 0 || shaft > elevators.length - 1)
         {
-            upRequestList.addDestination(callBtn);
-        } else {
-            downRequestList.addDestination(callBtn);
+            throw new IllegalArgumentException();
+        }
+        return outerDoors[floor][shaft].isOpen();
+    }
+    
+    /**
+     * 
+     * @param floor
+     * @param direction
+     * @return 
+     */
+    public boolean isCallButtonActive(int floor, String direction)
+    {
+        return (direction.equals(UP) ? upButtonList[floor].getButtonState() : downButtonList[floor].getButtonState());
+    }
+    
+    /**
+     * 
+     * @param floor
+     * @param direction
+     * @return 
+     */
+    public boolean isCallButtonLightLit(int floor, String direction)
+    {
+        return (direction.equals(UP) ? upButtonList[floor].getLightState() : downButtonList[floor].getLightState());
+    }
+    
+    /**
+     * 
+     * @param floor
+     * @param shaft
+     * @return 
+     */
+    public boolean isElevatorButtonActive(int floor, int shaft)
+    {
+        return elevators[shaft].getButtonState(floor);
+    }
+    
+    /**
+     * 
+     * @param floor
+     * @param shaft
+     * @return 
+     */
+    public boolean isElevatorButtonLightLit(int floor, int shaft)
+    {
+        System.out.println("Shaft " + shaft);
+        return elevators[shaft - 1].getButtonLightState(floor);
+    }
+    
+    
+    public boolean isElevatorDoorOpen(int shaft)
+    {
+        return elevators[shaft - 1].getDoorState();
+    }
+    
+    public int getElevatorLocation(int shaft)
+    {
+        return elevators[shaft - 1].getCurrentFloor();
+    }
+    
+    /**
+     * Call an elevator to service the specified floor
+     * @param floor
+     * @param direction
+     */
+    public void callElevator(int floor, String direction) throws IllegalArgumentException
+    {
+        if (bottomFloor > floor || floor > topFloor)
+        {
+            throw new IllegalArgumentException();
+        }
+        switch (direction) {
+            case UP:
+                upRequestList.addDestination(upButtonList[floor]);
+                break;
+            case DOWN:
+                downRequestList.addDestination(downButtonList[floor]);
+                break;
+            default:
+                throw new IllegalArgumentException();
         }
     }
     
     /**
      * 
+     * @param floor
+     * @param shaft 
+     */
+    public void selectFloor(int floor, int shaft) throws IllegalArgumentException
+    {
+        // Is this a valid way to check parameters for validity?
+        try {
+            outerDoors[elevators[shaft].getCurrentFloor()][shaft].close();
+            elevators[shaft].selectFloor(floor);
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            throw new IllegalArgumentException();
+        }
+    }
+    /**
+     * 
      */
     public void tick()
     {
-        boolean foundUp = false, foundDown = false;
-        // check elevator states
+        // Close any open doors
+        while (!openDoors.empty())
+        {
+            openDoors.pop().close();
+        }
+        
+        // Add destinations to elevators as possible
         for (Elevator e : elevators)
         {
             if (e.getDirection() >= 0)
@@ -166,6 +274,34 @@ public class ElevatorSystem {
             {
                 downRequestList.getDestinations(e);
             }
+        }
+        // Tick all elevators and check if they have arrived at a destination
+        for (Elevator e : elevators)
+        {
+            String direction;
+            e.tick();
+            if (e.isArrived())
+            {
+                if (e.getDirection() == 1)
+                {
+                    direction = UP;
+                } else {
+                    direction = DOWN;
+                }
+                elevatorArrived(e.getCurrentFloor(), e.getShaftID(), direction);
+            }
+        }
+    }
+    
+    /**
+     * 
+     */
+    private void elevatorArrived(int floorID, int shaftID, String direction) {
+        outerDoors[floorID][shaftID].open();
+        if (direction.equals(UP)) {
+            upButtonList[floorID].deactivate();
+        } else {
+            downButtonList[floorID].deactivate();
         }
     }
 }
