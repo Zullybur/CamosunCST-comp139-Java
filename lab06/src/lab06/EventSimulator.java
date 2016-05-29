@@ -69,7 +69,7 @@ public class EventSimulator implements EventSimulatorInterface {
     @Override
     public boolean isTargetButtonLit(int floor) throws IllegalArgumentException
     {
-        return es.isElevatorButtonLightLit(floor, 1);
+        return es.isElevatorButtonLightLit(floor, 0);
     }
 
     /**
@@ -88,7 +88,7 @@ public class EventSimulator implements EventSimulatorInterface {
     @Override
     public boolean isElevatorDoorOpen()
     {
-        return es.isElevatorDoorOpen(1);
+        return es.isElevatorDoorOpen(0);
     }
     
     /**
@@ -125,7 +125,7 @@ public class EventSimulator implements EventSimulatorInterface {
     @Override
     public int getCurrentElevatorFloor()
     {
-        return es.getElevatorLocation(1);
+        return es.getElevatorLocation(0);
     }
     
     /**

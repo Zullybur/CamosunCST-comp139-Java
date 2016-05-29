@@ -31,9 +31,12 @@ public class Elevator
     private int motion;
     
     /**
-     * Instantiate an elevator object with only above-ground floors.
-     * Pre: A system exists to control the elevator
-     * Post: An elevator object was created and set to be on the first floor
+     * Instantiate an elevator object with only above-ground floors.<br>
+     * 
+     * Pre: A system exists to control the elevator<br>
+     * Post: An elevator object was created and set to be on the first floor<br>
+     * Cleanup: N/A<br>
+     * 
      * @param numFloors is a positive number greater than one that is the number of above-ground floors the elevator can access
      * @param shaftID is the shaft in which the elevator operates, or 0 in a single elevator system
      * @param hasThirteen is True if the system has a 13th floor, otherwise False
@@ -64,9 +67,12 @@ public class Elevator
     }
     
     /**
-     * Instantiate an elevator object with above and below ground floors.
-     * Pre: A system exists to control the elevator
-     * Post: An elevator object was created and set to be on the first floor
+     * Instantiate an elevator object with above and below ground floors.<br>
+     * 
+     * Pre: A system exists to control the elevator<br>
+     * Post: An elevator object was created and set to be on the first floor<br>
+     * Cleanup: N/A<br>
+     * 
      * @param numFloors is a positive number greater than one that is the number of above-ground floors the elevator can access
      * @param shaftID is the shaft in which the elevator operates, or 0 in a single elevator system
      * @param numSubFloors is a number greater than or equal to zero that is the number of below-ground floors the elevator can access
@@ -130,7 +136,7 @@ public class Elevator
     }
     
     /**
-     * Increment elevator count and return an ID for an elevator
+     * Increment elevator count and return an ID for an elevator.
      */
     private int getNextID()
     {
@@ -138,9 +144,14 @@ public class Elevator
     }
     
     /**
+     * Get the state of the button for a specific floor.<br>
      * 
-     * @param floor
-     * @return 
+     * PRE: N/A<br>
+     * POST: N/A<br>
+     * Cleanup: N/A<br>
+     * 
+     * @param floor is the reference for which button to check
+     * @return true if the button is active, false if the button is inactive
      */
     public boolean getButtonState(int floor)
     {
@@ -148,9 +159,14 @@ public class Elevator
     }
     
     /**
+     * Get the state of the light for a button for a specific floor.<br>
      * 
-     * @param floor
-     * @return 
+     * PRE: N/A<br>
+     * POST: N/A<br>
+     * Cleanup: N/A<br>
+     * 
+     * @param floor is the reference for which button to check
+     * @return true if the light is active, false if the light is inactive
      */
     public boolean getButtonLightState(int floor)
     {
@@ -158,8 +174,13 @@ public class Elevator
     }
     
     /**
+     * Get the state of the elevator's door.<br>
      * 
-     * @return 
+     * PRE: N/A<br>
+     * POST: N/A<br>
+     * Cleanup: N/A<br>
+     * 
+     * @return true if the door is open, false if the door is closed
      */
     public boolean getDoorState()
     {
@@ -167,7 +188,12 @@ public class Elevator
     }
     
     /**
-     * Get the current number of elevators created.
+     * Get the current number of elevators created.<br>
+     * 
+     * PRE: N/A<br>
+     * POST: N/A<br>
+     * Cleanup: N/A<br>
+     * 
      * @return the current number of elevators
      */
     public int getElevatorCount()
@@ -176,7 +202,12 @@ public class Elevator
     }
     
     /**
-     * Get the ID of the elevator object.
+     * Get the ID of the elevator object.<br>
+     * 
+     * PRE: N/A<br>
+     * POST: N/A<br>
+     * Cleanup: N/A<br>
+     * 
      * @return the elevator ID as an integer
      */
     public int getElevatorID()
@@ -185,8 +216,13 @@ public class Elevator
     }
     
     /**
+     * Get the shaft ID in which the elevator operates.<br>
      * 
-     * @return 
+     * PRE: N/A<br>
+     * POST: N/A<br>
+     * Cleanup: N/A<br>
+     * 
+     * @return the ID number for the shaft the elevator was assigned to
      */
     public int getShaftID()
     {
@@ -194,7 +230,12 @@ public class Elevator
     }
     
     /**
-     * Get the current floor the elevator is on.
+     * Get the current floor the elevator is on.<br>
+     * 
+     * PRE: N/A<br>
+     * POST: N/A<br>
+     * Cleanup: N/A<br>
+     * 
      * @return the current floor as an integer
      */
     public int getCurrentFloor()
@@ -203,7 +244,12 @@ public class Elevator
     }
     
     /**
-     * Get the top floor the elevator has access to.
+     * Get the top floor the elevator has access to.<br>
+     * 
+     * PRE: N/A<br>
+     * POST: N/A<br>
+     * Cleanup: N/A<br>
+     * 
      * @return the top floor as an integer
      */
     public int getTopFloor()
@@ -212,7 +258,12 @@ public class Elevator
     }
     
     /**
-     * Get the lowest floor the elevator has access to.
+     * Get the lowest floor the elevator has access to.<br>
+     * 
+     * PRE: N/A<br>
+     * POST: N/A<br>
+     * Cleanup: N/A<br>
+     * 
      * @return the lowest floor as an integer (first floor is 1, basements are
      * reverse indexed starting at -1 and descending, floor zero never exists)
      */
@@ -221,8 +272,13 @@ public class Elevator
         return bottomFloor;
     }
     
-     /**
-      * Get the current destination for the elevator.
+    /**
+     * Get the current destination for the elevator.<br>
+     * 
+     * PRE: N/A<br>
+     * POST: N/A<br>
+     * Cleanup: N/A<br>
+     * 
       * @return the next location the elevator will stop at given it's current state, as an integer
       */
     public int getDestination()
@@ -231,7 +287,12 @@ public class Elevator
     }
     
     /**
-     * Get the current direction the elevator is traveling in.
+     * Get the current direction the elevator is traveling in.<br>
+     * 
+     * PRE: N/A<br>
+     * POST: N/A<br>
+     * Cleanup: N/A<br>
+     * 
      * @return 1 if the elevator is moving up, 0 if it is stationary, and -1 if it is moving down
      */
     public int getDirection()
@@ -240,8 +301,13 @@ public class Elevator
     }
     
     /**
+     * Check if the elevator has arrived at the set destination.<br>
      * 
-     * @return 
+     * PRE: N/A<br>
+     * POST: N/A<br>
+     * Cleanup: N/A<br>
+     * 
+     * @return true if the elevator has just arrived, false if not
      */
     public boolean isArrived()
     {
@@ -249,12 +315,16 @@ public class Elevator
     }
     
     /**
-     * Adds a floor number to the destination list for this elevator.
-     * PRE: The request was generated by a floor button
+     * Adds a floor number to the destination list for this elevator.<br>
+     * 
+     * PRE: The request was generated by a floor button<br>
      * POST: The floor is added to the elevator's list of destinations, or the 
      * elevator signals it's arrival if the floor is the current floor, the
-     * floor button is activated and the button lit.
+     * floor button is activated and the button lit<br>
+     * Cleanup: N/A<br>
+     * 
      * @param floorID is a floor that is accessible by the elevator
+     * @throws IllegalArgumentException if the floorID is invalid
      */
     public void selectFloor(int floorID) throws IllegalArgumentException
     {
@@ -293,10 +363,13 @@ public class Elevator
     }
     
     /**
-     * Adds a floor number to the destination list for this elevator.
-     * PRE: The request was generated by a call button
+     * Adds a floor number to the destination list for this elevator.<br>
+     * 
+     * PRE: The request was generated by a call button<br>
      * POST: The floor is added to the elevator's list of destinations, or the 
-     * elevator signals it's arrival if the floor is the current floor
+     * elevator signals it's arrival if the floor is the current floor<br
+     * Cleanup: N/A<br>
+     * 
      * @param callBtn is the call button making the elevator service request
      */
     public void addServiceRequest(CallButton callBtn) throws IllegalArgumentException
@@ -333,21 +406,15 @@ public class Elevator
     }
     
     /**
-     * Conduct a single time event for an elevator.
-     * Completes elevator motion if movement is warranted, and updates
-     * the state based on the new location.
+     * Conduct a single time-step event for an elevator.<br>
+     * 
+     * PRE: N/A<br>
+     * POST: The elevator moves as required and the state is updated to represent
+     * any required changes<br>
+     * Cleanup: N/A<br>
      */
     public void tick() throws IllegalStateException
     {
-        /****************** Testing ******************
-        System.out.println("***** Elevator ("+elevatorID+","+shaftID+") Pre Tick *****");
-        System.out.println("Arrival: "+hasArrived);
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        /********************************************/
         hasArrived = false;
         // Close door before moving, if open
         if (innerDoor.isOpen()) innerDoor.close();
@@ -385,8 +452,10 @@ public class Elevator
     
     /**
      * Move the elevator up one floor.
+     * 
      * PRE: The elevator is not on the top floor
      * POST: The elevator ascends one floor
+     * 
      * @throws IllegalStateException if the elevator tries to ascend above the highest floor
      */
     private void incrementFloor() throws IllegalStateException
@@ -408,8 +477,10 @@ public class Elevator
     
     /**
      * Move the elevator down one floor.
+     * 
      * PRE: The elevator is not on the bottom floor
      * POST: The elevator descends one floor
+     * 
      * @throws IllegalStateException if the elevator tries to descend below the lowest floor
      */
     private void decrementFloor() throws IllegalStateException
@@ -431,14 +502,15 @@ public class Elevator
     
     /**
      * Play a chime noise if supported, otherwise output a chime message to screen.
-     * PRE: The elevator was not at the destination on the previous tick
-     * POST: A chime was played or a notice was output to screen
      */
     private void playChime()
     {
         System.out.println("Elevator: " + elevatorID + " played it's chime!"); 
     }
 
+    /**
+     * Adjust the elevator state to account for arriving at the given destination
+     */
     private void arrived() {
         if(!hasArrived) {
             floorButtons[currentFloor].deactivate();

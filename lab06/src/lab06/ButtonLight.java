@@ -16,7 +16,7 @@ public class ButtonLight
     /**
      * Instantiate a button light in the OFF state.<br>
      * 
-     * PRE: N/A<br>
+     * PRE: A button exists for the light to operate with<br>
      * POST: The light for the button was created in the OFF state<br>
      * Cleanup: N/A<br>
      */
@@ -39,9 +39,11 @@ public class ButtonLight
     }
     
     /**
-     * Change the button light state to OFF.
-     * PRE: The button is in the ON state
-     * POST: The button was set to OFF
+     * Change the button light state to OFF.<br>
+     * 
+     * PRE: The button is in the ON state<br>
+     * POST: The button was set to OFF<br>
+     * Cleanup: N/A<br>
      */
     public void turnOff()
     {
@@ -49,8 +51,13 @@ public class ButtonLight
     }
     
     /**
-     * Get the state of the button light.
-     * @return true if the button light is ON, false if the button light is OFF
+     * Get the state of the button light.<br>
+     * 
+     * PRE: N/A<br>
+     * POST: N/A<br>
+     * Cleanup: N/A<br>
+     * 
+     * @return true if the button light is ON, false if the button light is OFF<br>
      */
     public boolean getState()
     {

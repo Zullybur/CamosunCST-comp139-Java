@@ -16,7 +16,12 @@ public class FloorButton
     private ButtonLight btnLight;
     
     /**
-     * Create a button that corresponds to a specific floor and contains a light
+     * Create a button that corresponds to a specific floor and contains a light.<br>
+     * 
+     * PRE: An elevator system exists to contain the floor button<br>
+     * POST: A floor button was created with the given floor ID and name<br>
+     * Cleanup: N/A<br>
+     * 
      * @param floorID is the floor the button belongs to
      * @param floorName is the label for the floor
      */
@@ -29,7 +34,12 @@ public class FloorButton
     }
     
     /**
-     * Get the ID of the floor this button represents.
+     * Get the ID of the floor this button represents.<br>
+     * 
+     * PRE: N/A<br>
+     * POST: N/A<br>
+     * Cleanup: N/A<br>
+     * 
      * @return the floor ID value as an integer
      */
     public int getFloorID()
@@ -38,7 +48,12 @@ public class FloorButton
     }
     
     /**
-     * Get the name label of the floor this button represents.
+     * Get the name label of the floor this button represents.<br>
+     * 
+     * PRE: N/A<br>
+     * POST: N/A<br>
+     * Cleanup: N/A<br>
+     * 
      * @return the floor name as a String
      */
     public String getFloorName()
@@ -47,7 +62,12 @@ public class FloorButton
     }
     
     /**
-     * Get the current state of the button.
+     * Get the current state of the button.<br>
+     * 
+     * PRE: N/A<br>
+     * POST: N/A<br>
+     * Cleanup: N/A<br>
+     * 
      * @return true if the button is active, false if the button is inactive
      */
     public boolean getButtonState()
@@ -56,7 +76,12 @@ public class FloorButton
     }
     
     /**
-     * Get the current state of the light for the button.
+     * Get the current state of the light for the button.<br>
+     * 
+     * PRE: N/A<br>
+     * POST: N/A<br>
+     * Cleanup: N/A<br>
+     * 
      * @return true if the light is on, false if the light is off
      */
     public boolean getLightState()
@@ -65,9 +90,11 @@ public class FloorButton
     }
     
     /**
-     * Activate the floor button.
-     * PRE: The button is not active
-     * POST: The button was activated and the light turned on
+     * Activate the floor button.<br>
+     * 
+     * PRE: The button is not active<br>
+     * POST: The button was activated and the light turned on<br>
+     * Cleanup: N/A<br>
      */
     public void activate()
     {
@@ -76,9 +103,11 @@ public class FloorButton
     }
     
     /**
-     * Deactivate the floor button.
-     * PRE: The button is activated
-     * POST: The button was deactivated and the light was turned off
+     * Deactivate the floor button.<br>
+     * 
+     * PRE: The button is activated<br>
+     * POST: The button was deactivated and the light was turned off<br>
+     * Cleanup: N/A<br>
      */
     public void deactivate()
     {

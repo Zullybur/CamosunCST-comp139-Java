@@ -16,10 +16,15 @@ public class CallButton {
     private ButtonLight btnLight;
     
     /**
-     * Create a button that corresponds to a specific floor and contains a light
-     * @param floorID is the floor the button belongs to
-     * @param floorName is the label for the floor
-     * @param direction is whether the caller wants to go up or down
+     * Create a button that corresponds to a specific floor and contains a light.<br>
+     * 
+     * PRE: An elevator system exists with a floor for the call button to belong to<br>
+     * POST: A call button was created in the inactive state.<br>
+     * Cleanup: N/A<br>
+     * 
+     * @param floorID is the floor the button belongs to<br>
+     * @param floorName is the label for the floor<br>
+     * @param direction is whether the caller wants to go up or down<br>
      */
     public CallButton(int floorID, String floorName, String direction) throws IllegalArgumentException
     {
@@ -36,7 +41,12 @@ public class CallButton {
     }
     
     /**
-     * Get the ID of the floor this button represents.
+     * Get the ID of the floor this button belongs to.
+     * 
+     * PRE: N/A<br>
+     * POST: N/A<br>
+     * Cleanup: N/A<br>
+     * 
      * @return the floor ID value as an integer
      */
     public int getFloorID()
@@ -46,6 +56,11 @@ public class CallButton {
     
     /**
      * Get the name label of the floor this button represents.
+     * 
+     * PRE: N/A<br>
+     * POST: N/A<br>
+     * Cleanup: N/A<br>
+     * 
      * @return the floor name as a String
      */
     public String getFloorName()
@@ -54,7 +69,12 @@ public class CallButton {
     }
     
     /**
-     * Get the direction that this button requests for.
+     * Get the direction that this button requests an elevator for.
+     * 
+     * PRE: N/A<br>
+     * POST: N/A<br>
+     * Cleanup: N/A<br>
+     * 
      * @return the floor's direction as a String
      */
     public String getDirection()

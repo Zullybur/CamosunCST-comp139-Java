@@ -15,6 +15,10 @@ public class Door {
     
     /**
      * Instantiate an INNER door belonging to an elevator.
+     * 
+     * PRE: An elevator exists for the door to belong to<br>
+     * POST: An elevator door was created for an elevator<br>
+     * Cleanup: N/A<br>
      */
     public Door()
     {
@@ -26,7 +30,12 @@ public class Door {
     }
     
     /**
-     * Instantiate an OUTER door belonging to an elevator
+     * Instantiate an OUTER door belonging to an elevator.<br>
+     * 
+     * PRE: A floor exists for the elevator to below to<br>
+     * POST: A door was created for a floor<br>
+     * Cleanup: N/A<br>
+     * 
      * @param floorID is the id number for the floor the door is on
      * @param floorName is the label for the floor the door is on
      * @param shaftNumber is the shaft number that the door services
@@ -41,8 +50,13 @@ public class Door {
     }
     
     /**
+     * Get the state of the door.<br>
      * 
-     * @return 
+     * PRE: N/A<br>
+     * POST: N/A<br>
+     * Cleanup: N/A<br>
+     * 
+     * @return true if the door is open, otherwise false
      */
     public boolean isOpen()
     {
@@ -50,8 +64,13 @@ public class Door {
     }
     
     /**
+     * Get the type of the door object.<br>
      * 
-     * @return 
+     * PRE: N/A<br>
+     * POST: N/A<br>
+     * Cleanup: N/A<br>
+     * 
+     * @return "OUTER" for an outer door or "INNER" for an inner door
      */
     public String getDoorType()
     {
@@ -59,7 +78,11 @@ public class Door {
     }
     
     /**
+     * Open the door.<br>
      * 
+     * PRE: The door is closed<br>
+     * POST: The door was opened<br>
+     * Cleanup: N/A<br>
      */
     public void open()
     {
@@ -67,7 +90,11 @@ public class Door {
     }
     
     /**
+     * Close the door.<br>
      * 
+     * PRE: The door is open<br>
+     * POST: The door was closed<br>
+     * Cleanup: N/A<br>
      */
     public void close()
     {

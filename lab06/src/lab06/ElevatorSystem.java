@@ -27,7 +27,12 @@ public class ElevatorSystem {
     private Elevator[] elevators;
     
     /**
-     * Instantiate an elevator system with a given number of floors and elevator shafts.
+     * Instantiate an elevator system with a given number of floors and elevator shafts.<br>
+     * 
+     * PRE: N/A<br>
+     * POST: N/A<br>
+     * Cleanup: N/A<br>
+     * 
      * @param numFloors is the number of above-ground floors the elevator services
      * @param numSubFloors is the number of below-ground floors the elevator services
      * @param hasThirteen indicates whether or not there is a 13th floor
@@ -143,10 +148,15 @@ public class ElevatorSystem {
     }
     
     /**
+     * Get the state of the door for a given floor -> shaft combination.<br>
      * 
-     * @param floor
-     * @param shaft
-     * @return 
+     * PRE: N/A<br>
+     * POST: N/A<br>
+     * Cleanup: N/A<br>
+     * 
+     * @param floor is the floor the door is on
+     * @param shaft is the shaft the door belongs to
+     * @return true if the door is open, false if the door is closed
      */
     public boolean isFloorDoorOpen(int floor, int shaft) throws IllegalArgumentException
     {
@@ -159,10 +169,15 @@ public class ElevatorSystem {
     }
     
     /**
+     * Get the state of a given call button.<br>
      * 
-     * @param floor
-     * @param direction
-     * @return 
+     * PRE: N/A<br>
+     * POST: N/A<br>
+     * Cleanup: N/A<br>
+     * 
+     * @param floor is the floor the button is on
+     * @param direction indicates if you are checking the UP button or the DOWN button
+     * @return true if the button is active, false if the button is inactive
      */
     public boolean isCallButtonActive(int floor, String direction)
     {
@@ -170,10 +185,15 @@ public class ElevatorSystem {
     }
     
     /**
+     * Get the state of a given call button's light.<br>
      * 
-     * @param floor
-     * @param direction
-     * @return 
+     * PRE: N/A<br>
+     * POST: N/A<br>
+     * Cleanup: N/A<br>
+     * 
+     * @param floor is the floor the button is on
+     * @param direction indicates if you are checking the UP button or the DOWN button
+     * @return true if the light is on, false if the light is off
      */
     public boolean isCallButtonLightLit(int floor, String direction)
     {
@@ -181,10 +201,15 @@ public class ElevatorSystem {
     }
     
     /**
+     * Get the state of a given elevator's given floor button.<br>
      * 
-     * @param floor
-     * @param shaft
-     * @return 
+     * PRE: N/A<br>
+     * POST: N/A<br>
+     * Cleanup: N/A<br>
+     * 
+     * @param floor is the button in the elevator to check
+     * @param shaft is the shaft the elevator to check is in
+     * @return true if the button is active, false if the button is inactive
      */
     public boolean isElevatorButtonActive(int floor, int shaft)
     {
@@ -192,32 +217,61 @@ public class ElevatorSystem {
     }
     
     /**
+     * Get the state of a given elevator's given button's light.<br>
      * 
-     * @param floor
-     * @param shaft
-     * @return 
+     * PRE: N/A<br>
+     * POST: N/A<br>
+     * Cleanup: N/A<br>
+     * 
+     * @param floor is the button in the elevator to check
+     * @param shaft is the shaft the elevator to check is in
+     * @return true if the light is on, false if the light is off
      */
     public boolean isElevatorButtonLightLit(int floor, int shaft)
     {
         System.out.println("Shaft " + shaft);
-        return elevators[shaft - 1].getButtonLightState(floor);
-    }
-    
-    
-    public boolean isElevatorDoorOpen(int shaft)
-    {
-        return elevators[shaft - 1].getDoorState();
-    }
-    
-    public int getElevatorLocation(int shaft)
-    {
-        return elevators[shaft - 1].getCurrentFloor();
+        return elevators[shaft].getButtonLightState(floor);
     }
     
     /**
-     * Call an elevator to service the specified floor
-     * @param floor
-     * @param direction
+     * Get the state of a given elevator's door.<br>
+     * 
+     * PRE: N/A<br>
+     * POST: N/A<br>
+     * Cleanup: N/A<br>
+     * 
+     * @param shaft is the shaft the elevator to check is in
+     * @return true if the door is open, false otherwise
+     */
+    public boolean isElevatorDoorOpen(int shaft)
+    {
+        return elevators[shaft].getDoorState();
+    }
+    
+    /**
+     * Get the location of a given elevator.<br>
+     * 
+     * PRE: N/A<br>
+     * POST: N/A<br>
+     * Cleanup: N/A<br>
+     * 
+     * @param shaft is the shaft in which the elevator resides
+     * @return the floor the elevator is on as an integer
+     */
+    public int getElevatorLocation(int shaft)
+    {
+        return elevators[shaft].getCurrentFloor();
+    }
+    
+    /**
+     * Call an elevator to service the specified floor.<br>
+     * 
+     * PRE: N/A<br>
+     * POST: The service request is logged for assignment by the system<br>
+     * Cleanup: N/A<br>
+     * 
+     * @param floor is the floor requesting the service
+     * @param direction is the intended direction of travel for the service request
      */
     public void callElevator(int floor, String direction) throws IllegalArgumentException
     {
@@ -238,9 +292,15 @@ public class ElevatorSystem {
     }
     
     /**
+     * Record the selection of a destination from inside an elevator.<br>
      * 
-     * @param floor
-     * @param shaft 
+     * PRE: N/A<br>
+     * POST: The system updates the elevator with the given destination<br>
+     * Cleanup: N/A<br>
+     * 
+     * @param floor is the floor the user wishes to stop at
+     * @param shaft is the shaft in which the elevator resides
+     * @throws IllegalArgumentException if floor or shaft are invalid
      */
     public void selectFloor(int floor, int shaft) throws IllegalArgumentException
     {
@@ -253,6 +313,13 @@ public class ElevatorSystem {
         }
     }
     /**
+     * Conduct a single time-event for the elevator system.<br>
+     * 
+     * PRE: N/A<br>
+     * POST: All open floor doors are closed, all elevators are assigned any
+     * possible destinations, all elevator time events are called, and arrival
+     * states checked<br>
+     * Cleanup: N/A<br>
      * 
      */
     public void tick()
@@ -294,7 +361,7 @@ public class ElevatorSystem {
     }
     
     /**
-     * 
+     * Adjust door and button states when an elevator arrives.
      */
     private void elevatorArrived(int floorID, int shaftID, String direction) {
         outerDoors[floorID][shaftID].open();

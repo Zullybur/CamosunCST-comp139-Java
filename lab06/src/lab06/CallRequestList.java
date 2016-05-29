@@ -34,20 +34,27 @@ public class CallRequestList
     }
     
     /**
-     * Assign valid destinations to a given elevator.
+     * Assign valid destinations to a given elevator.<br>
+     * 
      * PRE: The elevator is moving in the same direction as the Call Request List
-     * is serving, or the elevator is stationary
-     * POST: The elevator is assigned all valid destinations given its current state
+     * is serving, or the elevator is stationary<br>
+     * POST: The elevator is assigned all valid destinations given its current state<br>
+     * Cleanup: N/A<br>
+     * 
      * @param e is the elevator being assigned new destinations
      */
     public void getDestinations(Elevator e)
     {
+        // Iterate over the destination list and add call buttons to the elevator
+        // if the elevator is in a position to service them
         ListIterator i = destinationList.listIterator();
         while (i.hasNext()) {
             CallButton callBtn;
             callBtn = (CallButton) i.next();
             if (isValidFloor(callBtn, e))
             {
+                // Add the floor to the elevator and remove from the request list
+                // if possible, otherwise catch the error to prevent a crash
                 try {
                     e.addServiceRequest(callBtn);
                     i.remove();
@@ -60,7 +67,12 @@ public class CallRequestList
     }
 
     /**
-     * Check if floorID should be added to an elevator's destination list.
+     * Check if floorID should be added to an elevator's destination list.<br>
+     * 
+     * PRE: N/A<br>
+     * POST: N/A<br>
+     * Cleanup: N/A<br>
+     * 
      * @param floorID is the integer representing the floor being checked
      * @param currentFloor is the elevator's current location
      * @return true if the elevator is going up and the floor is above it, or
@@ -68,6 +80,7 @@ public class CallRequestList
      */
     private boolean isValidFloor(CallButton callBtn, Elevator e)
     {
+        // Compare call button direction to elevator direction and add if matching
         if (direction.equals(UP) && e.getDirection() == 1)
         {
             return callBtn.getFloorID() > e.getCurrentFloor();
@@ -80,9 +93,12 @@ public class CallRequestList
     }
     
     /**
-     * Add a floor to the destination list.
-     * PRE: The floorID does not already have an active call button for this direction
-     * POST: The floorID is added to the list of floors requesting service
+     * Add a floor to the destination list.<br>
+     * 
+     * PRE: The floorID does not already have an active call button for this direction<br>
+     * POST: The floorID is added to the list of floors requesting service<br>
+     * Cleanup: N/A<br>
+     * 
      * @param callBtn is the call button requesting service
      */
     public void addDestination(CallButton callBtn)
