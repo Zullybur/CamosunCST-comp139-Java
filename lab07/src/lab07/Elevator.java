@@ -10,25 +10,17 @@ package lab07;
  */
 public class Elevator
 {
-    private final String UP = "UP";
-    private final String DOWN = "DOWN";
     private static final int MAX_FLRS = 999;
     private static final int MIN_FLRS = 2;
     private static final int MIN_SUB_FLRS = 0;    
-    private boolean hasThirteen, hasArrived;
+    private boolean hasThirteen, hasZero, hasArrived;
     private int elevatorID, shaftID, currentFloor, destination, topFloor, bottomFloor;
     private int offset;             // Offset is used to account for sub-floors when returning values
     private static int count = 0;   // ID's to track multiple elevators in larger system
     private Door innerDoor;
     private FloorButton[] floorButtons;
     private DestinationList destinationList;
-    /***********************
-     * Track motion state: *
-     * -1  : moving down   *
-     *  0  : stationary    *
-     *  1  : moving up     *
-     ***********************/
-    private int motion;
+    private Direction direction;
     
     /**
      * Instantiate an elevator object with only above-ground floors.<br>
@@ -39,24 +31,27 @@ public class Elevator
      * 
      * @param numFloors is a positive number greater than one that is the number of above-ground floors the elevator can access
      * @param shaftID is the shaft in which the elevator operates, or 0 in a single elevator system
+     * @param hasZero is true if the first floor is floor 0, or false if the first floor is floor 1
      * @param hasThirteen is True if the system has a 13th floor, otherwise False
      */
-    public Elevator(int numFloors, int shaftID, boolean hasThirteen) throws IllegalArgumentException
+    public Elevator(int numFloors, int shaftID, boolean hasZero, boolean hasThirteen) throws IllegalArgumentException
     {
         if (MIN_FLRS > numFloors || numFloors > MAX_FLRS)
         {
             throw new IllegalArgumentException();
         }
-        motion = 0;
+        direction = Direction.NULL;
+        this.hasZero = hasZero;
         this.hasThirteen = hasThirteen;
         elevatorID = getNextID();
-        currentFloor = 1 + offset;
+        currentFloor = (hasZero ? 0 : 1) + offset;
         this.shaftID = shaftID;
-        this.topFloor = hasThirteen ? numFloors : (numFloors + 1);
+        this.topFloor = numFloors + (hasZero ? -1 : 0) + (hasThirteen ? 0 : 1);
         this.offset = 0;
-        bottomFloor = 1;
+        bottomFloor = (hasZero ? 0 : 1);
         innerDoor = new Door();
         destinationList = new DestinationList(numFloors);
+        destination = bottomFloor - 1;
         try
         {
             setFloorButtons();
@@ -76,21 +71,23 @@ public class Elevator
      * @param numFloors is a positive number greater than one that is the number of above-ground floors the elevator can access
      * @param shaftID is the shaft in which the elevator operates, or 0 in a single elevator system
      * @param numSubFloors is a number greater than or equal to zero that is the number of below-ground floors the elevator can access
+     * @param hasZero hasZero is true if the first floor is floor 0, or false if the first floor is floor 1
      * @param hasThirteen is True if the system has a 13th floor, otherwise False
      */
-    public Elevator(int numFloors, int shaftID, int numSubFloors, boolean hasThirteen) throws IllegalArgumentException
+    public Elevator(int numFloors, int numSubFloors, int shaftID, boolean hasZero, boolean hasThirteen) throws IllegalArgumentException
     {
         if (MIN_FLRS > numFloors || MIN_SUB_FLRS > numSubFloors ||
             numFloors > MAX_FLRS || numSubFloors > MAX_FLRS)
         {
             throw new IllegalArgumentException();
         }
-        motion = 0;
+        direction = Direction.NULL;
+        this.hasZero = hasZero;
         this.hasThirteen = hasThirteen;
         elevatorID = getNextID();
         currentFloor = 1 + offset;
         this.shaftID = shaftID;
-        this.topFloor = (!hasThirteen && numFloors > 12) ? (numFloors + 1) : numFloors;
+        this.topFloor = numFloors + (hasZero ? -1 : 0) + (hasThirteen ? 0 : 1);
         this.offset = numSubFloors;
         bottomFloor = -offset;
         innerDoor = new Door();
@@ -99,7 +96,7 @@ public class Elevator
         {
             setFloorButtons();
         } catch (IllegalStateException ex) {
-            System.out.println("Illegal state reached when created elevator! Floors not instantiated.");
+            System.out.println("Illegal state reached when creating elevator! Floors not instantiated.");
             System.out.println(ex);
         }
     }
@@ -115,8 +112,8 @@ public class Elevator
         floorButtons = new FloorButton[tmp + 1];
         for (int i = 0, j = offset; i <= tmp; i++)
         {
-            // Skip floor zero (and thirteen if required)
-            if ((i - offset == 0) || (!hasThirteen && i == 13)) continue;
+            // Skip null floors
+            if ((!hasZero && i - offset == 0) || (!hasThirteen && i - offset == 13)) continue;
             // Generate labels for each floor for use in GUI applications
             String name;
             if (j > 0)
@@ -295,9 +292,9 @@ public class Elevator
      * 
      * @return 1 if the elevator is moving up, 0 if it is stationary, and -1 if it is moving down
      */
-    public int getDirection()
+    public Direction getDirection()
     {
-        return motion;
+        return direction;
     }
     
     /**
@@ -331,7 +328,7 @@ public class Elevator
         // Close elevator doors once user selects a floor
         innerDoor.close();
 //      DEBUG:  System.out.println("Top floor: " + topFloor);
-        if (floorID > topFloor || floorID < bottomFloor)
+        if (floorID > topFloor || bottomFloor > floorID)
         {
             throw new IllegalArgumentException();
         }
@@ -341,24 +338,24 @@ public class Elevator
         {
             arrived();
         // If the elevator has no destination, set the floorID as the destination
-        } else if (destination == 0) {
+        } else if (destination == bottomFloor - 1) {
             destination = floorID;
         // If the selected floor should be the next destination, put the current
         // destination back in the destination list and use the selected floor
         // as the new next destination
-        } else if (motion == 1 && floorID > currentFloor && floorID < destination) {
+        } else if (direction == Direction.UP && floorID > currentFloor && floorID < destination) {
             destinationList.addDestination(destination, currentFloor, null);
             destination = floorID;
-        } else if (motion == -1 && floorID < currentFloor && floorID > destination) {
+        } else if (direction == Direction.DOWN && floorID < currentFloor && floorID > destination) {
             destinationList.addDestination(destination, currentFloor, null);
             destination = floorID;
         } else {
             destinationList.addDestination(floorID, currentFloor, null);
         }
         // If the elevator is not moving, start it in the direction of the latest request
-        if (motion == 0 && destination != 0)
+        if (direction == Direction.NULL)
         {
-            motion = (destination > currentFloor ? 1 : -1);
+            direction = (destination > currentFloor ? Direction.UP : Direction.DOWN);
         }
     }
     
@@ -375,33 +372,32 @@ public class Elevator
     public void addServiceRequest(CallButton callBtn) throws IllegalArgumentException
     {
         int floorID = callBtn.getFloorID();
-        String direction = callBtn.getDirection();
+        Direction btnDirection = callBtn.getDirection();
         
         if (floorID > topFloor || floorID < bottomFloor)
         {
             throw new IllegalArgumentException();
         }
-        // Check if call should be new destination
-        
         
         // Signal arrived if the current floor is selected
         if (floorID == currentFloor)
         {
             arrived();
         // If the elevator has no destination, set the floorID as the destination
-        } else if (destination == 0) {
+        } else if (destination < bottomFloor) {
             destination = floorID;
+            direction = (destination > currentFloor ? Direction.UP : Direction.DOWN);
         // If the selected floor should be the next destination, put the current
         // destination back in the destination list and use the selected floor
         // as the new next destination
-        } else if (motion == 1 && floorID > currentFloor && floorID < destination && direction.equals(UP)) {
-            destinationList.addDestination(destination, currentFloor, "null");
+        } else if (this.direction == Direction.UP && floorID > currentFloor && floorID < destination && btnDirection == Direction.UP) {
+            destinationList.addDestination(destination, currentFloor, Direction.NULL);
             destination = floorID;
-        } else if (motion == -1 && floorID < currentFloor && floorID > destination && direction.equals(DOWN)) {
-            destinationList.addDestination(destination, currentFloor, "null");
+        } else if (this.direction == Direction.DOWN && floorID < currentFloor && floorID > destination && btnDirection == Direction.DOWN) {
+            destinationList.addDestination(destination, currentFloor, Direction.NULL);
             destination = floorID;
         } else {
-            destinationList.addDestination(floorID, currentFloor, direction);
+            destinationList.addDestination(floorID, currentFloor, btnDirection);
         }
     }
     
@@ -420,13 +416,13 @@ public class Elevator
         if (innerDoor.isOpen()) innerDoor.close();
         
         // Move in the current direction for the elevator
-        switch (motion) {
-            case 0:
+        switch (direction) {
+            case NULL:
                 break;
-            case 1:
+            case UP:
                 incrementFloor();
                 break;
-            case -1:
+            case DOWN:
                 decrementFloor();
                 break;
             default:
@@ -435,16 +431,20 @@ public class Elevator
         // Check if elevator is at next destination
         if (currentFloor == destination)
         {
+            System.out.println("arriving at " + destination);
             arrived();
         }
-        // Update motion for next destination
-        if (destination == 0)
+        
+        // Update direction for next destination
+        if (destination < bottomFloor)
         {
-            motion = 0;
+            direction = Direction.NULL;
         } else if (destination > currentFloor) {
-            motion = 1;
+            direction = Direction.UP;
+            System.out.println("Moved to "+currentFloor);
         } else if (destination < currentFloor) {
-            motion = -1;
+            direction = Direction.DOWN;
+            System.out.println("Moved to "+currentFloor);
         } else {
             throw new IllegalStateException();
         }
@@ -463,7 +463,7 @@ public class Elevator
         int tmpFloor = currentFloor;
         currentFloor++;
         // Move past null floors
-        if (currentFloor == 0 || (!hasThirteen && currentFloor == 13))
+        if ((!hasZero && currentFloor == 0) || (!hasThirteen && currentFloor == 13))
         {
             currentFloor++;
         }
@@ -488,7 +488,7 @@ public class Elevator
         int tmpFloor = currentFloor;
         currentFloor--;
         // Move past null floors
-        if (currentFloor == 0 || (!hasThirteen && currentFloor == 13))
+        if ((!hasZero && currentFloor == 0) || (!hasThirteen && currentFloor == 13))
         {
             currentFloor--;
         }
@@ -517,7 +517,7 @@ public class Elevator
             innerDoor.open();
             playChime();
             hasArrived = true;
-            destination = destinationList.getNextDestination(motion).floorID;
+            destination = destinationList.getNextDestination(bottomFloor, direction).floorID;
         }
     }
 }

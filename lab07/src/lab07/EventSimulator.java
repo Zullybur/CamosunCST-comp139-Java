@@ -13,7 +13,7 @@ public class EventSimulator implements EventSimulatorInterface {
         {
             throw new IllegalArgumentException();
         }
-        es = new ElevatorSystem(numFloors, 0, true, 1);
+        es = new ElevatorSystem(numFloors, 0, true, true, 1);
     }
     /**
      * LIGHTS
@@ -33,7 +33,7 @@ public class EventSimulator implements EventSimulatorInterface {
     @Override
     public boolean isDownCallButtonLit(int floor) throws IllegalArgumentException
     {
-        return es.isCallButtonLightLit(floor, "DOWN");
+        return es.isCallButtonLightLit(floor, Direction.DOWN);
     }
 
     /**
@@ -50,7 +50,7 @@ public class EventSimulator implements EventSimulatorInterface {
     @Override
     public boolean isUpCallButtonLit(int floor) throws IllegalArgumentException
     {
-        return es.isCallButtonLightLit(floor, "UP");
+        return es.isCallButtonLightLit(floor, Direction.UP);
     }
 
     /**
@@ -146,7 +146,7 @@ public class EventSimulator implements EventSimulatorInterface {
     @Override
     public void callElevatorDown(int floor) throws IllegalArgumentException
     {
-        es.callElevator(floor, "DOWN");
+        es.callElevator(floor, Direction.DOWN);
     }
 
     /**
@@ -163,7 +163,7 @@ public class EventSimulator implements EventSimulatorInterface {
     @Override
     public void callElevatorUp(int floor) throws IllegalArgumentException
     {
-        es.callElevator(floor, "UP");
+        es.callElevator(floor, Direction.UP);
     }
     
      /**

@@ -1,4 +1,4 @@
-package lab06;
+package lab07;
 
 import lab07.EventSimulator;
 import lab07.EventSimulatorInterface;
@@ -90,8 +90,7 @@ public class EventSimulatorInterfaceTest {
         assertEquals(false, simulator.isTargetButtonLit(7));
         assertEquals(false, simulator.isFloorDoorOpen(7));
         assertEquals(false, simulator.isElevatorDoorOpen());
-        // Bottom floor is 1, not zero :)
-        assertEquals(1, simulator.getCurrentElevatorFloor());
+        assertEquals(0, simulator.getCurrentElevatorFloor());
 
         // Person on floor 7 wants to go down
         simulator.callElevatorDown(7);
@@ -100,8 +99,7 @@ public class EventSimulatorInterfaceTest {
         assertEquals(false, simulator.isTargetButtonLit(7));
         assertEquals(false, simulator.isFloorDoorOpen(7));
         assertEquals(false, simulator.isElevatorDoorOpen());
-        // Bottom floor is 1, not zero :)
-        assertEquals(1, simulator.getCurrentElevatorFloor());
+        assertEquals(0, simulator.getCurrentElevatorFloor());
 
         // Here we go...
         for (int i = 1; i < 7; i++) {

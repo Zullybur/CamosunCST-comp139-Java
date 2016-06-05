@@ -8,10 +8,10 @@ package lab07;
  * Created: 23 May 2016
  */
 public class Door {
-    private final String[] DOOR_TYPES = {"OUTER", "INNER"};
     private boolean isOpen;
     private int floorID, shaftNumber;
-    private String doorType, floorName;
+    private DoorType doorType;
+    private String floorName;
     
     /**
      * Instantiate an INNER door belonging to an elevator.
@@ -22,11 +22,8 @@ public class Door {
      */
     public Door()
     {
-        this.floorID = 0;
-        this.floorName = "N/A";
-        this.shaftNumber = 0;
         isOpen = false;
-        doorType = DOOR_TYPES[1];
+        doorType = DoorType.INNER;
     }
     
     /**
@@ -46,7 +43,7 @@ public class Door {
         this.floorName = floorName;
         this.shaftNumber = shaftNumber;
         isOpen = false;
-        doorType = DOOR_TYPES[0];
+        doorType = DoorType.OUTER;
     }
     
     /**
@@ -72,7 +69,7 @@ public class Door {
      * 
      * @return "OUTER" for an outer door or "INNER" for an inner door
      */
-    public String getDoorType()
+    public DoorType getDoorType()
     {
         return doorType;
     }

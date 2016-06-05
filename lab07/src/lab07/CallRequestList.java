@@ -12,25 +12,23 @@ import java.util.ListIterator;
  */
 public class CallRequestList
 {
-    private static final String UP = "UP";
-    private static final String DOWN = "DOWN";
-    private LinkedList<CallButton> destinationList;
-    private String direction;
+    private LinkedList<CallButton> requestList;
+    private Direction direction;
     
     /**
      * Instantiate a Call Request List to hold a list of waiting elevator calls
      * that want to move in a specified direction.
      * @param direction is "UP" if the list services up call buttons, otherwise "DOWN"
      */
-    public CallRequestList(String direction) throws IllegalArgumentException
+    public CallRequestList(Direction direction) throws IllegalArgumentException
     {
-        if (direction.equals(DOWN) || direction.equals(UP))
+        if (direction == Direction.DOWN || direction == Direction.UP)
         {
             this.direction = direction;
         } else {
             throw new IllegalArgumentException();
         }
-        destinationList = new LinkedList<>();
+        requestList = new LinkedList<>();
     }
     
     /**
@@ -47,7 +45,7 @@ public class CallRequestList
     {
         // Iterate over the destination list and add call buttons to the elevator
         // if the elevator is in a position to service them
-        ListIterator i = destinationList.listIterator();
+        ListIterator i = requestList.listIterator();
         while (i.hasNext()) {
             CallButton callBtn;
             callBtn = (CallButton) i.next();
@@ -81,12 +79,12 @@ public class CallRequestList
     private boolean isValidFloor(CallButton callBtn, Elevator e)
     {
         // Compare call button direction to elevator direction and add if matching
-        if (direction.equals(UP) && e.getDirection() == 1)
+        if (direction == Direction.UP && e.getDirection() == Direction.UP)
         {
             return callBtn.getFloorID() > e.getCurrentFloor();
-        } else if (direction.equals(DOWN) && e.getDirection() == -1) {
+        } else if (direction == Direction.DOWN && e.getDirection() == Direction.DOWN) {
             return callBtn.getFloorID() < e.getCurrentFloor();
-        } else if (e.getDirection() == 0) {
+        } else if (e.getDirection() == Direction.NULL) {
             return true;
         }
         return false;
@@ -103,7 +101,7 @@ public class CallRequestList
      */
     public void addDestination(CallButton callBtn)
     {
-        destinationList.add(callBtn);
+        requestList.add(callBtn);
         callBtn.activate();
     }
 }

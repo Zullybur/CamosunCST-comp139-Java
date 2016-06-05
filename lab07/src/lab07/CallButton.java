@@ -8,11 +8,10 @@ package lab07;
  * Created: 23 May 2016
  */
 public class CallButton {
-    private static final String UP = "UP";
-    private static final String DOWN = "DOWN";
     private boolean isActive;
     private int floorID;
-    private String floorName, direction;
+    private String floorName;
+    private Direction direction;
     private ButtonLight btnLight;
     
     /**
@@ -26,9 +25,9 @@ public class CallButton {
      * @param floorName is the label for the floor<br>
      * @param direction is whether the caller wants to go up or down<br>
      */
-    public CallButton(int floorID, String floorName, String direction) throws IllegalArgumentException
+    public CallButton(int floorID, String floorName, Direction direction) throws IllegalArgumentException
     {
-        if (direction.equals(UP) || direction.equals(DOWN))
+        if (direction == Direction.UP || direction == Direction.DOWN)
         {
             this.direction = direction;
         } else {
@@ -77,7 +76,7 @@ public class CallButton {
      * 
      * @return the floor's direction as a String
      */
-    public String getDirection()
+    public Direction getDirection()
     {
         return direction;
     }

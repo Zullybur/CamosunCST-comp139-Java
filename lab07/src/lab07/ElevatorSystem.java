@@ -13,9 +13,7 @@ public class ElevatorSystem {
     public static final int MAX_FLRS = 999;
     public static final int MIN_FLRS = 2;
     public static final int MIN_SUB_FLRS = 0;
-    private static final String UP = "UP";
-    private static final String DOWN = "DOWN";
-    private boolean hasThirteen;
+    private boolean hasThirteen, hasZero;
     private int topFloor, bottomFloor, numShafts;
     private int offset;             // Offset is used to account for sub-floors when returning values
     private CallRequestList upRequestList;
@@ -35,12 +33,13 @@ public class ElevatorSystem {
      * 
      * @param numFloors is the number of above-ground floors the elevator services
      * @param numSubFloors is the number of below-ground floors the elevator services
+     * @param hasZero is true if the floors are zero indexed, false if there is no floor zero
      * @param hasThirteen indicates whether or not there is a 13th floor
      * @param numShafts is the number of separate elevator shafts in the system
      * @throws IllegalArgumentException if numFloors or numSubFloors is out of the ranges:<br>
      * (MIN_FLRS <= numFloors <= MAX_FLRS) and (MIN_SUB_FLRS <= numSubFloors <= MAX_FLOORS)
      */
-    public ElevatorSystem(int numFloors, int numSubFloors, boolean hasThirteen, int numShafts)
+    public ElevatorSystem(int numFloors, int numSubFloors, boolean hasZero, boolean hasThirteen, int numShafts)
             throws IllegalArgumentException
     {
         if (MIN_FLRS > numFloors || MIN_SUB_FLRS > numSubFloors ||
@@ -48,87 +47,74 @@ public class ElevatorSystem {
         {
             throw new IllegalArgumentException();
         }
+        this.hasZero = hasZero;
         this.hasThirteen = hasThirteen;
         this.numShafts = numShafts;
         // Add a floor if skipping thirteen unless floor count is under 13
-        this.topFloor = (!hasThirteen && numFloors > 12) ? (numFloors + 1) : numFloors;
+        this.topFloor = numFloors + (hasZero ? 0 : -1) + (hasThirteen ? 0 : 1);
         this.offset = numSubFloors;
-        this.bottomFloor = (offset != 0) ? -offset : 1;
-        upRequestList = new CallRequestList(UP);
-        downRequestList = new CallRequestList(DOWN);
+        this.bottomFloor = (offset != 0) ? -offset : (hasZero ? 0 : 1);
+        upRequestList = new CallRequestList(Direction.UP);
+        downRequestList = new CallRequestList(Direction.DOWN);
         // Add one to account for ignoring floor zero
         upButtonList = new CallButton[topFloor + offset + 1];
         downButtonList = new CallButton[topFloor + offset + 1];
-        setCallButtons(upButtonList, UP);
-        setCallButtons(downButtonList, DOWN);
-        createDoors();
+        outerDoors = new Door[topFloor + offset + 1][numShafts];
+//        setCallButtons(upButtonList, Direction.UP);
+//        setCallButtons(downButtonList, Direction.DOWN);
+//        createDoors();
+        createFloors();
         createElevators(numFloors, numSubFloors);
         openDoors = new Stack<>();
     }
     
-    /**
-     * Generate the buttons for each floor as required
-     */
-    private void setCallButtons(CallButton[] buttonList, String direction)
+    private void createFloors()
     {
         int tmp = topFloor + offset;
         for (int i = 0, j = offset; i <= tmp; i++)
         {
-            // No up button on highest floor
-            if (i == tmp && direction.equals(UP)) continue;
-            // No down button on lowest floor
-            if (i == 0 && direction.equals(DOWN)) continue;
             // Skip floor zero (and thirteen if required)
-            if ((i - offset == 0) || (!hasThirteen && i == 13)) continue;
+            if ((!hasZero && i - offset == 0) || (!hasThirteen && i - offset == 13)) continue;
             
             // Generate labels for each floor for use in GUI applications
             String name;
+            // Create subfloors
             if (j > 0)
             {
                 if (j < 10)         name = "B:00";
                 else if (j < 100)   name = "B:0";
                 else                name = "B:";
-                buttonList[i] = new CallButton(-j, name + j, direction);
+                // Create up button
+                upButtonList[i] = new CallButton(-j, name + j, Direction.UP);
+                // Create down button, except on lowest floor
+                if (j != offset) {
+                    downButtonList[i] = new CallButton(-j, name + j, Direction.DOWN);
+                }
+                // Create outer doors for each shaft
+                for (int s = 0; s < numShafts; s++)
+                {
+                    outerDoors[i][s] = new Door(-j, name, s);
+                }
+                // Create Elevator
                 j--;
+            // Create main floors
             } else {
                 if (i < 10)         name = "F:00";
                 else if (i < 100)   name = "F:0";
                 else                name = "F:";
-                buttonList[i] = new CallButton(i-offset, name + (i-offset), direction);
-            }
-        }
-    }
-    
-    /**
-     * Create outer door objects for each shaft on each floor
-     */
-    private void createDoors()
-    {
-        int tmp = topFloor + offset;
-        // Add one to account for no floor zero or shaft zero
-        outerDoors = new Door[tmp + 1][numShafts + 1];
-        // instantiate Doors in nested loops (Floors -> Shafts)
-        for (int i = 0, j = offset; i <= tmp; i++)
-        {
-            // Skip floor zero (and thirteen if required)
-            if ((i - offset == 0) || (!hasThirteen && i == 13)) continue;
-            
-            for (int s = 0; s < numShafts; s++)
-            {
-                // Generate labels for each door in the system
-                String name;
-                if (j > 0)
+                // Create up botton, except on top floor
+                if (i != tmp)
                 {
-                    if (j < 10)         name = "B:00" + j + "-" + s;
-                    else if (j < 100)   name = "B:0" + j + "-" + s;
-                    else                name = "B:" + j + "-" + s;
+                    upButtonList[i] = new CallButton(i - offset, name + i, Direction.UP);
+                }
+                // Create down button, except on bottom floor
+                if (i - offset != 0 || offset > 0)
+                {
+                    downButtonList[i] = new CallButton(i-offset, name + (i-offset), Direction.DOWN);
+                }
+                for (int s = 0; s < numShafts; s++)
+                {
                     outerDoors[i][s] = new Door(-j, name, s);
-                    j--;
-                } else {
-                    if (i < 10)         name = "F:00" + (i-offset) + "-" + s;
-                    else if (i < 100)   name = "F:0" + (i-offset) + "-" + s;
-                    else                name = "F:" + (i-offset) + "-" + s;
-                    outerDoors[i][s] = new Door(i-offset, name, s);
                 }
             }
         }
@@ -143,7 +129,7 @@ public class ElevatorSystem {
         
         for (int s = 0; s < numShafts; s++)
         {
-            elevators[s] =  new Elevator(numFloors, numSubFloors, hasThirteen);
+            elevators[s] =  new Elevator(numFloors, numSubFloors, hasZero, hasThirteen);
         }
     }
     
@@ -179,9 +165,9 @@ public class ElevatorSystem {
      * @param direction indicates if you are checking the UP button or the DOWN button
      * @return true if the button is active, false if the button is inactive
      */
-    public boolean isCallButtonActive(int floor, String direction)
+    public boolean isCallButtonActive(int floor, Direction direction)
     {
-        return (direction.equals(UP) ? upButtonList[floor].getButtonState() : downButtonList[floor].getButtonState());
+        return (direction == Direction.UP ? upButtonList[floor].getButtonState() : downButtonList[floor].getButtonState());
     }
     
     /**
@@ -195,9 +181,9 @@ public class ElevatorSystem {
      * @param direction indicates if you are checking the UP button or the DOWN button
      * @return true if the light is on, false if the light is off
      */
-    public boolean isCallButtonLightLit(int floor, String direction)
+    public boolean isCallButtonLightLit(int floor, Direction direction)
     {
-        return (direction.equals(UP) ? upButtonList[floor].getLightState() : downButtonList[floor].getLightState());
+        return (direction == Direction.UP ? upButtonList[floor].getLightState() : downButtonList[floor].getLightState());
     }
     
     /**
@@ -229,7 +215,6 @@ public class ElevatorSystem {
      */
     public boolean isElevatorButtonLightLit(int floor, int shaft)
     {
-        System.out.println("Shaft " + shaft);
         return elevators[shaft].getButtonLightState(floor);
     }
     
@@ -273,7 +258,7 @@ public class ElevatorSystem {
      * @param floor is the floor requesting the service
      * @param direction is the intended direction of travel for the service request
      */
-    public void callElevator(int floor, String direction) throws IllegalArgumentException
+    public void callElevator(int floor, Direction direction) throws IllegalArgumentException
     {
         if (bottomFloor > floor || floor > topFloor)
         {
@@ -333,11 +318,11 @@ public class ElevatorSystem {
         // Add destinations to elevators as possible
         for (Elevator e : elevators)
         {
-            if (e.getDirection() >= 0)
+            if (e.getDirection() == Direction.UP || e.getDirection() == Direction.NULL)
             {
                 upRequestList.getDestinations(e);
             }
-            if (e.getDirection() <= 0)
+            if (e.getDirection() == Direction.DOWN || e.getDirection() == Direction.NULL)
             {
                 downRequestList.getDestinations(e);
             }
@@ -345,15 +330,15 @@ public class ElevatorSystem {
         // Tick all elevators and check if they have arrived at a destination
         for (Elevator e : elevators)
         {
-            String direction;
+            Direction direction;
             e.tick();
             if (e.isArrived())
             {
-                if (e.getDirection() == 1)
+                if (e.getDirection() == Direction.UP)
                 {
-                    direction = UP;
+                    direction = Direction.UP;
                 } else {
-                    direction = DOWN;
+                    direction = Direction.DOWN;
                 }
                 elevatorArrived(e.getCurrentFloor(), e.getShaftID(), direction);
             }
@@ -363,11 +348,11 @@ public class ElevatorSystem {
     /**
      * Adjust door and button states when an elevator arrives.
      */
-    private void elevatorArrived(int floorID, int shaftID, String direction) {
+    private void elevatorArrived(int floorID, int shaftID, Direction direction) {
         outerDoors[floorID][shaftID].open();
-        if (direction.equals(UP)) {
+        if (direction == Direction.UP && floorID != topFloor) {
             upButtonList[floorID].deactivate();
-        } else {
+        } else if (direction == Direction.DOWN && floorID != bottomFloor) {
             downButtonList[floorID].deactivate();
         }
     }

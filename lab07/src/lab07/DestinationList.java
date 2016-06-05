@@ -12,8 +12,6 @@ import java.util.PriorityQueue;
  */
 public class DestinationList
 {
-    private static final String UP = "UP";
-    private static final String DOWN = "DOWN";
     /**
      * A destination object contains a floor id and the requested direction from
      * a call button OR elevator button service request, direction is the string null
@@ -21,7 +19,7 @@ public class DestinationList
      */
     protected class Destination {
         int floorID;
-        String direction;
+        Direction direction;
         /**
          * Create a destination object to represent a floor requested and direction to travel in.<br>
          * 
@@ -33,9 +31,9 @@ public class DestinationList
          * @param direction is "UP" or "DOWN" for a call button and "null" for an elevator button
          * @throws IllegalArgumentException if direction is invalid or floor ID is out of range for the system
          */
-        private Destination(int floorID, String direction) throws IllegalArgumentException
+        private Destination(int floorID, Direction direction) throws IllegalArgumentException
         {
-            if (direction.equals(UP) || direction.equals(DOWN) || direction.equals("null"))
+            if (direction == Direction.UP || direction == Direction.DOWN || direction == Direction.NULL)
             {
                 this.direction = direction;
             } else {
@@ -77,7 +75,7 @@ public class DestinationList
      * internal elevator button
      * @throws IllegalArgumentException if floorID = location
      */
-    public void addDestination(int floorID, int location, String direction) throws IllegalArgumentException
+    public void addDestination(int floorID, int location, Direction direction) throws IllegalArgumentException
     {
         if (floorID > location)
         {
@@ -93,18 +91,19 @@ public class DestinationList
      * Get the next destination the elevator should service.<br>
      * 
      * PRE: N/A<br>
-     * POST: A destination was removed from the destination list<br>
+     * POST: A destination was removed from the destination list, if there is no<br>
+     * new destination, the destination is set to one floor lower than the lowest floor
      * Cleanup: N/A<br>
      * 
-     * @param motion is the direction the elevator is moving (1 for up, -1 for down)
+     * @param bottomFloor is the lowest floor the elevator can reach
+     * @param direction is the direction the elevator is moving
      * @return the next destination the elevator should service
-     * @throws IllegalArgumentException if motion is not 1 or -1
+     * @throws IllegalArgumentException if direction is not 1 or -1
      */
-    public Destination getNextDestination(int motion) throws IllegalArgumentException
+    public Destination getNextDestination(int bottomFloor, Direction direction)
     {
-        if (Math.abs(motion) != 1) throw new IllegalArgumentException();
         
-        if (motion == 1)
+        if (direction == Direction.UP)
         {
             if (upwardDestinations.peek() != null)
             {
@@ -112,7 +111,7 @@ public class DestinationList
             } else if (downwardDestinations.peek() != null) {
                 return downwardDestinations.poll();
             }
-        } else if (motion == -1) {
+        } else if (direction == Direction.DOWN) {
             if (downwardDestinations.peek() != null)
             {
                 return downwardDestinations.poll();
@@ -120,6 +119,6 @@ public class DestinationList
                 return upwardDestinations.poll();
             }
         }
-        return new Destination(0, "null");
+        return new Destination(bottomFloor - 1, Direction.NULL);
     }
 }
