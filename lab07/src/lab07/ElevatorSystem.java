@@ -86,10 +86,8 @@ public class ElevatorSystem {
                 else                name = "B:";
                 // Create up button
                 upButtonList[i] = new CallButton(-j, name + j, Direction.UP);
-                // Create down button, except on lowest floor
-                if (j != offset) {
-                    downButtonList[i] = new CallButton(-j, name + j, Direction.DOWN);
-                }
+                // Create down buttons
+                downButtonList[i] = new CallButton(-j, name + j, Direction.DOWN);
                 // Create outer doors for each shaft
                 for (int s = 0; s < numShafts; s++)
                 {
@@ -102,16 +100,11 @@ public class ElevatorSystem {
                 if (i < 10)         name = "F:00";
                 else if (i < 100)   name = "F:0";
                 else                name = "F:";
-                // Create up botton, except on top floor
-                if (i != tmp)
-                {
-                    upButtonList[i] = new CallButton(i - offset, name + i, Direction.UP);
-                }
-                // Create down button, except on bottom floor
-                if (i - offset != 0 || offset > 0)
-                {
-                    downButtonList[i] = new CallButton(i-offset, name + (i-offset), Direction.DOWN);
-                }
+                // Create up bottons
+                upButtonList[i] = new CallButton(i - offset, name + i, Direction.UP);
+                // Create down buttons
+                downButtonList[i] = new CallButton(i-offset, name + (i-offset), Direction.DOWN);
+                
                 for (int s = 0; s < numShafts; s++)
                 {
                     outerDoors[i][s] = new Door(-j, name, s);
@@ -289,10 +282,9 @@ public class ElevatorSystem {
      */
     public void selectFloor(int floor, int shaft) throws IllegalArgumentException
     {
-        // Is this a valid way to check parameters for validity?
         try {
-            outerDoors[elevators[shaft].getCurrentFloor()][shaft].close();
             elevators[shaft].selectFloor(floor);
+            outerDoors[elevators[shaft].getCurrentFloor()][shaft].close();
         } catch (ArrayIndexOutOfBoundsException ex) {
             throw new IllegalArgumentException();
         }
@@ -315,32 +307,18 @@ public class ElevatorSystem {
             openDoors.pop().close();
         }
         
-        // Add destinations to elevators as possible
-        for (Elevator e : elevators)
-        {
-            if (e.getDirection() == Direction.UP || e.getDirection() == Direction.NULL)
-            {
-                upRequestList.getDestinations(e);
-            }
-            if (e.getDirection() == Direction.DOWN || e.getDirection() == Direction.NULL)
-            {
-                downRequestList.getDestinations(e);
-            }
-        }
+        // Add destinations to elevators
+        upRequestList.getDestinations(elevators[0]);
+        downRequestList.getDestinations(elevators[0]);
+        
         // Tick all elevators and check if they have arrived at a destination
         for (Elevator e : elevators)
         {
-            Direction direction;
             e.tick();
+            System.out.println(e);
             if (e.isArrived())
             {
-                if (e.getDirection() == Direction.UP)
-                {
-                    direction = Direction.UP;
-                } else {
-                    direction = Direction.DOWN;
-                }
-                elevatorArrived(e.getCurrentFloor(), e.getShaftID(), direction);
+                elevatorArrived(e.getCurrentFloor(), e.getShaftID());
             }
         }
     }
@@ -348,12 +326,10 @@ public class ElevatorSystem {
     /**
      * Adjust door and button states when an elevator arrives.
      */
-    private void elevatorArrived(int floorID, int shaftID, Direction direction) {
+    private void elevatorArrived(int floorID, int shaftID) {
         outerDoors[floorID][shaftID].open();
-        if (direction == Direction.UP && floorID != topFloor) {
-            upButtonList[floorID].deactivate();
-        } else if (direction == Direction.DOWN && floorID != bottomFloor) {
-            downButtonList[floorID].deactivate();
-        }
+        openDoors.push(outerDoors[floorID][0]);
+        upButtonList[floorID].deactivate();
+        downButtonList[floorID].deactivate();
     }
 }

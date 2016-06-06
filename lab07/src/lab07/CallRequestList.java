@@ -49,17 +49,14 @@ public class CallRequestList
         while (i.hasNext()) {
             CallButton callBtn;
             callBtn = (CallButton) i.next();
-            if (isValidFloor(callBtn, e))
-            {
-                // Add the floor to the elevator and remove from the request list
-                // if possible, otherwise catch the error to prevent a crash
-                try {
-                    e.addServiceRequest(callBtn);
-                    i.remove();
-                } catch (IllegalArgumentException ex) {
-                    // crash prevention - i.remove() fails if exception is thrown
-                    // above so list state is maintained.
-                }
+            // Add the floor to the elevator and remove from the request list
+            // if possible, otherwise catch the error to prevent a crash
+            try {
+                e.addServiceRequest(callBtn);
+                i.remove();
+            } catch (IllegalArgumentException ex) {
+                // crash prevention - i.remove() fails if exception is thrown
+                // above so list state is maintained.
             }
         }
     }
@@ -101,6 +98,7 @@ public class CallRequestList
      */
     public void addDestination(CallButton callBtn)
     {
+        System.out.println("Adding Call Button: "+callBtn.getFloorID());
         requestList.add(callBtn);
         callBtn.activate();
     }

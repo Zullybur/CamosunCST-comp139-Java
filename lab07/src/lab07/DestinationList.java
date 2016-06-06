@@ -17,7 +17,7 @@ public class DestinationList
      * a call button OR elevator button service request, direction is the string null
      * for elevator buttons.
      */
-    protected class Destination {
+    protected class Destination implements Comparable<Destination>{
         int floorID;
         Direction direction;
         /**
@@ -40,6 +40,11 @@ public class DestinationList
                 throw new IllegalArgumentException();
             }
             this.floorID = floorID;
+        }
+
+        @Override
+        public int compareTo(Destination o) {
+            return this.floorID - o.floorID;
         }
     }
     private PriorityQueue<Destination> upwardDestinations;
@@ -120,5 +125,24 @@ public class DestinationList
             }
         }
         return new Destination(bottomFloor - 1, Direction.NULL);
+    }
+    
+    public String toString()
+    {
+        String str = "Destinations (UP):\n";
+        Destination[] tmpUpList;
+        tmpUpList = upwardDestinations.toArray(new Destination[0]);
+        for (Destination d : tmpUpList){
+            d = (Destination)d;
+            str += d.floorID+", ";
+        }
+        str += "\nDestinations (DOWN):\n";
+        Destination[] tmpDnList;
+        tmpDnList = downwardDestinations.toArray(new Destination[0]);
+        for (Destination d : tmpDnList){
+            d = (Destination)d;
+            str += d.floorID+ ", ";
+        }
+        return str;
     }
 }

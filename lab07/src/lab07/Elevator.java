@@ -325,9 +325,7 @@ public class Elevator
      */
     public void selectFloor(int floorID) throws IllegalArgumentException
     {
-        // Close elevator doors once user selects a floor
         innerDoor.close();
-//      DEBUG:  System.out.println("Top floor: " + topFloor);
         if (floorID > topFloor || bottomFloor > floorID)
         {
             throw new IllegalArgumentException();
@@ -344,13 +342,13 @@ public class Elevator
         // destination back in the destination list and use the selected floor
         // as the new next destination
         } else if (direction == Direction.UP && floorID > currentFloor && floorID < destination) {
-            destinationList.addDestination(destination, currentFloor, null);
+            destinationList.addDestination(destination, currentFloor, Direction.NULL);
             destination = floorID;
         } else if (direction == Direction.DOWN && floorID < currentFloor && floorID > destination) {
-            destinationList.addDestination(destination, currentFloor, null);
+            destinationList.addDestination(destination, currentFloor, Direction.NULL);
             destination = floorID;
         } else {
-            destinationList.addDestination(floorID, currentFloor, null);
+            destinationList.addDestination(floorID, currentFloor, Direction.NULL);
         }
         // If the elevator is not moving, start it in the direction of the latest request
         if (direction == Direction.NULL)
@@ -411,6 +409,7 @@ public class Elevator
      */
     public void tick() throws IllegalStateException
     {
+        System.out.println(destinationList.toString());
         hasArrived = false;
         // Close door before moving, if open
         if (innerDoor.isOpen()) innerDoor.close();
@@ -421,9 +420,11 @@ public class Elevator
                 break;
             case UP:
                 incrementFloor();
+                System.out.println("Moved to: "+currentFloor);
                 break;
             case DOWN:
                 decrementFloor();
+                System.out.println("Moved to: "+currentFloor);
                 break;
             default:
                 throw new IllegalStateException();
@@ -440,11 +441,11 @@ public class Elevator
         {
             direction = Direction.NULL;
         } else if (destination > currentFloor) {
+            System.out.println("Setting direction: Up");
             direction = Direction.UP;
-            System.out.println("Moved to "+currentFloor);
         } else if (destination < currentFloor) {
+            System.out.println("Setting direction: Down");
             direction = Direction.DOWN;
-            System.out.println("Moved to "+currentFloor);
         } else {
             throw new IllegalStateException();
         }
@@ -511,13 +512,30 @@ public class Elevator
     /**
      * Adjust the elevator state to account for arriving at the given destination
      */
-    private void arrived() {
+    private void arrived()
+    {
         if(!hasArrived) {
             floorButtons[currentFloor].deactivate();
             innerDoor.open();
             playChime();
             hasArrived = true;
-            destination = destinationList.getNextDestination(bottomFloor, direction).floorID;
+            do {
+                destination = destinationList.getNextDestination(bottomFloor, direction).floorID;
+            } while (destination == currentFloor);
         }
+    }
+    
+    @Override
+    public String toString()
+    {
+        return "Elvator State:"+
+                "\n\tID:\t"+elevatorID+
+                "\n\tLOC:\t"+currentFloor+
+                "\n\tDEST:\t"+destination;
+    }
+
+    public String getDestinationList()
+    {
+        return destinationList.toString();
     }
 }

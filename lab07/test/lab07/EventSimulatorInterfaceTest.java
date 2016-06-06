@@ -1,7 +1,5 @@
 package lab07;
 
-import lab07.EventSimulator;
-import lab07.EventSimulatorInterface;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
