@@ -127,6 +127,16 @@ public class DestinationList
         return new Destination(bottomFloor - 1, Direction.NULL);
     }
     
+    /**
+     * Get a string representation of the destination list state.
+     * 
+     * PRE: N/A
+     * POST: N/A
+     * Cleanup: N/A
+     * 
+     * @return the destination list's state in string form
+     */
+    @Override
     public String toString()
     {
         String str = "Destinations (UP):\n";

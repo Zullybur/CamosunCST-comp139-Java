@@ -2,6 +2,8 @@
  */
 package lab07;
 
+import java.awt.Toolkit;
+
 /**
  * An elevator object that moves between floors and maintains a destination list
  * of what floors it needs to service.
@@ -114,7 +116,8 @@ public class Elevator
         {
             // Skip null floors
             if ((!hasZero && i - offset == 0) || (!hasThirteen && i - offset == 13)) continue;
-            // Generate labels for each floor for use in GUI applications
+            // Generate labels for each floor for use in GUI applications, where
+            // the pre-fix letter indicates an above-ground (F)loor or (B)asement floor
             String name;
             if (j > 0)
             {
@@ -409,7 +412,6 @@ public class Elevator
      */
     public void tick() throws IllegalStateException
     {
-        System.out.println(destinationList.toString());
         hasArrived = false;
         // Close door before moving, if open
         if (innerDoor.isOpen()) innerDoor.close();
@@ -502,11 +504,12 @@ public class Elevator
     }
     
     /**
-     * Play a chime noise if supported, otherwise output a chime message to screen.
+     * Play a chime noise and output a chime message to console.
      */
     private void playChime()
     {
-        System.out.println("Elevator: " + elevatorID + " played it's chime!"); 
+        Toolkit.getDefaultToolkit().beep();
+        System.out.println("Elevator " + elevatorID + " chimed!");
     }
 
     /**
@@ -525,6 +528,15 @@ public class Elevator
         }
     }
     
+    /**
+     * Get the string representation of the elevator's state.
+     * 
+     * PRE: N/A
+     * POST: N/A
+     * Cleanup: N/A
+     * 
+     * @return the elevator's state as a string
+     */
     @Override
     public String toString()
     {
@@ -532,10 +544,5 @@ public class Elevator
                 "\n\tID:\t"+elevatorID+
                 "\n\tLOC:\t"+currentFloor+
                 "\n\tDEST:\t"+destination;
-    }
-
-    public String getDestinationList()
-    {
-        return destinationList.toString();
     }
 }

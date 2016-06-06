@@ -7,7 +7,7 @@ package lab07;
  * @author MattCasiro
  */
 public enum Direction {
-    NULL,
-    UP,
-    DOWN
+    NULL,   // Indicates a stationary state
+    UP,     // Indicates an upward direction
+    DOWN    // Indicates a downward direction
 }

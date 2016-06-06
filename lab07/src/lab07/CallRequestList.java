@@ -34,8 +34,7 @@ public class CallRequestList
     /**
      * Assign valid destinations to a given elevator.<br>
      * 
-     * PRE: The elevator is moving in the same direction as the Call Request List
-     * is serving, or the elevator is stationary<br>
+     * PRE: N/A<br>
      * POST: The elevator is assigned all valid destinations given its current state<br>
      * Cleanup: N/A<br>
      * 
@@ -73,19 +72,22 @@ public class CallRequestList
      * @return true if the elevator is going up and the floor is above it, or
      * if the elevator is going down and the floor is below it
      */
-    private boolean isValidFloor(CallButton callBtn, Elevator e)
-    {
-        // Compare call button direction to elevator direction and add if matching
-        if (direction == Direction.UP && e.getDirection() == Direction.UP)
-        {
-            return callBtn.getFloorID() > e.getCurrentFloor();
-        } else if (direction == Direction.DOWN && e.getDirection() == Direction.DOWN) {
-            return callBtn.getFloorID() < e.getCurrentFloor();
-        } else if (e.getDirection() == Direction.NULL) {
-            return true;
-        }
-        return false;
-    }
+//REMOVED: all floor requests added to initial elevator as test cases required
+//immediate pick-up as elevator passes a floor with a request, regardless of
+//elevator and request direction.
+//    private boolean isValidFloor(CallButton callBtn, Elevator e)
+//    {
+//        // Compare call button direction to elevator direction and add if matching
+//        if (direction == Direction.UP && e.getDirection() == Direction.UP)
+//        {
+//            return callBtn.getFloorID() > e.getCurrentFloor();
+//        } else if (direction == Direction.DOWN && e.getDirection() == Direction.DOWN) {
+//            return callBtn.getFloorID() < e.getCurrentFloor();
+//        } else if (e.getDirection() == Direction.NULL) {
+//            return true;
+//        }
+//        return false;
+//    }
     
     /**
      * Add a floor to the destination list.<br>
@@ -98,7 +100,6 @@ public class CallRequestList
      */
     public void addDestination(CallButton callBtn)
     {
-        System.out.println("Adding Call Button: "+callBtn.getFloorID());
         requestList.add(callBtn);
         callBtn.activate();
     }

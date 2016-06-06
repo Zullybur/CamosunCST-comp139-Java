@@ -68,6 +68,10 @@ public class ElevatorSystem {
         openDoors = new Stack<>();
     }
     
+    /**
+     * Initialize all objects required for a floor to function, including
+     * doors, up buttons, and down buttons
+     */
     private void createFloors()
     {
         int tmp = topFloor + offset;
@@ -77,6 +81,7 @@ public class ElevatorSystem {
             if ((!hasZero && i - offset == 0) || (!hasThirteen && i - offset == 13)) continue;
             
             // Generate labels for each floor for use in GUI applications
+            // the pre-fix letter indicates an above-ground (F)loor or (B)asement floor
             String name;
             // Create subfloors
             if (j > 0)
@@ -324,7 +329,7 @@ public class ElevatorSystem {
     }
     
     /**
-     * Adjust door and button states when an elevator arrives.
+     * Adjust door and button states when an elevator arrives
      */
     private void elevatorArrived(int floorID, int shaftID) {
         outerDoors[floorID][shaftID].open();
