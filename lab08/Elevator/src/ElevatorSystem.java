@@ -120,10 +120,7 @@ public class ElevatorSystem implements CallElevatorSystemInterface {
         }
 
         if (dir == Direction.DIRECTION.UP) {
-            // Does current floor still need servicing in this direction?
-//            if (floors[currentFloor].callButton.isUpLit) {
-//                nextFloor = currentFloor;
-//            }
+
             // We are headed up, can we go any higher?
             nextFloor = (Integer) floorList.higherKey(currentFloor);
             if (nextFloor != null) {
@@ -180,14 +177,8 @@ public class ElevatorSystem implements CallElevatorSystemInterface {
             throw new IllegalArgumentException();
         }
 
-        //Remove up call if moving up
-//        if (this.dir == Direction.DIRECTION.UP) {
-            floors[floor].arrivedAtFloor(Direction.DIRECTION.UP);
-//        }
-        //Remove down call if moving down
-//        if (this.dir == Direction.DIRECTION.DOWN) {
-            floors[floor].arrivedAtFloor(Direction.DIRECTION.DOWN);
-//        }
+        floors[floor].arrivedAtFloor(Direction.DIRECTION.UP);
+        floors[floor].arrivedAtFloor(Direction.DIRECTION.DOWN);
         
         floorList.remove(floor);
         computeNextFloor();
