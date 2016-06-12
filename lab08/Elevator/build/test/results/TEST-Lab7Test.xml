@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite errors="0" failures="0" hostname="mcmbp.intra.camosun.bc.ca" name="Lab7Test" skipped="0" tests="1" time="0.601" timestamp="2016-06-12T23:19:57">
+<testsuite errors="0" failures="0" hostname="mcmbp.intra.camosun.bc.ca" name="Lab7Test" skipped="0" tests="1" time="0.748" timestamp="2016-06-12T23:31:22">
   <properties>
     <property name="libs.jsp-compiler.javadoc" value="" />
     <property name="netbeans.autoupdate.country" value="US" />
@@ -58,7 +58,7 @@
     <property name="libs.j2me_common_ant.maven-pom" value="" />
     <property name="libs.spring-webmvc3.0.maven-pom" value="" />
     <property name="libs.swing-layout.maven-pom" value="" />
-    <property name="sun.java.command" value="org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner Lab7Test skipNonTests=false filtertrace=true haltOnError=false haltOnFailure=false showoutput=true outputtoformatters=true logfailedtests=true threadid=0 logtestlistenerevents=true formatter=org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,/Users/MattCasiro/Dropbox/Camosun/comp139/labs/lab08/Elevator/build/test/results/TEST-Lab7Test.xml crashfile=/Users/MattCasiro/Dropbox/Camosun/comp139/labs/lab08/Elevator/build/junitvmwatcher2901858791266076979.properties propsfile=/Users/MattCasiro/Dropbox/Camosun/comp139/labs/lab08/Elevator/build/junit469035758938818586.properties" />
+    <property name="sun.java.command" value="org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner Lab7Test skipNonTests=false filtertrace=true haltOnError=false haltOnFailure=false showoutput=true outputtoformatters=true logfailedtests=true threadid=0 logtestlistenerevents=true formatter=org.apache.tools.ant.taskdefs.optional.junit.BriefJUnitResultFormatter formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,/Users/MattCasiro/Dropbox/Camosun/comp139/labs/lab08/Elevator/build/test/results/TEST-Lab7Test.xml crashfile=/Users/MattCasiro/Dropbox/Camosun/comp139/labs/lab08/Elevator/build/junitvmwatcher7953862454687261664.properties propsfile=/Users/MattCasiro/Dropbox/Camosun/comp139/labs/lab08/Elevator/build/junit1668379499008671907.properties" />
     <property name="build.classes.dir" value="build/classes" />
     <property name="netbeans.accept_license_class" value="org.netbeans.license.AcceptLicense" />
     <property name="build.sysclasspath" value="ignore" />
@@ -405,7 +405,7 @@
     <property name="awt.toolkit" value="sun.lwawt.macosx.LWCToolkit" />
     <property name="libs.javaee-web-api-7.0.javadoc" value="/Applications/NetBeans/NetBeans 8.1.app/Contents/Resources/NetBeans/enterprise/docs/javaee-doc-api.jar" />
   </properties>
-  <testcase classname="Lab7Test" name="testFullCycle3" time="0.459" />
+  <testcase classname="Lab7Test" name="testFullCycle3" time="0.589" />
   <system-out><![CDATA[----- testFullCycle 3 -----
 0
 1

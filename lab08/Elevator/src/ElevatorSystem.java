@@ -173,8 +173,6 @@ public class ElevatorSystem implements CallElevatorSystemInterface {
      * @throws IllegalArgumentException if the floor is out of range
      *
      * @see Floor#arrivedAtFloor(Direction.DIRECTION)
-     *
-     * TODO: Support different directions
      */
     @Override
     public void removeFloor(int floor) throws IllegalArgumentException {
