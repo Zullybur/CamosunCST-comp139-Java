@@ -19,8 +19,8 @@ public class UIView extends JFrame {
     protected static int numFloors;
 
     protected JButton[] callUpButtons;
-    // TODO callDownButtons
-    // TODO targetFloorButtons
+    protected JButton[] callDownButtons;
+    protected JButton[] targetFloorButtons;
 
     protected ImageIcon upOn;
     protected ImageIcon upOff;
@@ -182,8 +182,8 @@ public class UIView extends JFrame {
 
         // Create the buttons and doors
         callUpButtons = new JButton[numFloors];
-        // TODO callDownButtons
-        // TODO targetFloorButtons
+        callDownButtons = new JButton[numFloors];
+        targetFloorButtons = new JButton[numFloors];
 
         upOn = new ImageIcon(getClass().getResource("UpOn.jpeg"), "Up On");
         upOff = new ImageIcon(getClass().getResource("UpOff.jpeg"), "Up Off");
@@ -235,14 +235,50 @@ public class UIView extends JFrame {
             floorDoorIcon[i].setBounds(DOOR_H_OFFSET + insets.left, (int) (size.height * CALL_BUTTON_V_OFFSET * (numFloors - i - 1) + insets.top), 50, 50);
 
             // Down buttons
-            // TODO callDownButtons
+            callDownButtons[i] = new JButton();
+            callDownButtons[i].setText("DWN");
+            callDownButtons[i].setPreferredSize(new java.awt.Dimension(60, 25));
+            callDownButtons[i].addActionListener(new java.awt.event.ActionListener() {
+                int floor;
+
+                @Override
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    callDown(evt, floor);
+                }
+
+                public java.awt.event.ActionListener init(int floorNum) {
+                    floor = floorNum;
+                    return this;
+                }
+            }.init(i));
+            pane.add(callDownButtons[i]);
+            size = callDownButtons[i].getPreferredSize();
+            callDownButtons[i].setBounds(CALL_BUTTON_H_OFFSET + insets.left, (int) (size.height * CALL_BUTTON_V_OFFSET * (numFloors - i - 1) +25), size.width, size.height);
             // Down icons
             callDownIcon[i] = new JLabel(downOff);
             pane.add(callDownIcon[i]);
             callDownIcon[i].setBounds(insets.left, (int) (size.height * CALL_BUTTON_V_OFFSET * (numFloors - i - 1) + insets.top + size.height), 25, 25);
-
             // Floor buttons
-            // TODO targetFloorButtons
+            targetFloorButtons[i] = new JButton();
+            targetFloorButtons[i].setText("" + i);
+            targetFloorButtons[i].setPreferredSize(new java.awt.Dimension(60, 25));
+            targetFloorButtons[i].addActionListener(new java.awt.event.ActionListener() {
+                int floor;
+
+                @Override
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    selectFloor(evt, floor);
+                }
+
+                public java.awt.event.ActionListener init(int floorNum) {
+                    floor = floorNum;
+                    return this;
+                }
+            }.init(i));
+            pane.add(targetFloorButtons[i]);
+            size = targetFloorButtons[i].getPreferredSize();
+            targetFloorButtons[i].setBounds(TARGET_BUTTON_H_OFFSET + 40 + insets.left - size.width, size.height * (numFloors - i - 1) + insets.top, size.width, size.height);
+            
             // Target lights
             targetFloorIcon[i] = new JLabel(lightOff);
             pane.add(targetFloorIcon[i]);
@@ -251,6 +287,7 @@ public class UIView extends JFrame {
         callUpButtons[numFloors - 1].setVisible(false);
         callUpIcon[numFloors - 1].setVisible(false);
         // TODO callDownButtons
+        callDownButtons[0].setVisible(false);
         callDownIcon[0].setVisible(false);
 
         // Elevator icon
