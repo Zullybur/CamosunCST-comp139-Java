@@ -391,10 +391,10 @@ public class Elevator
         // If the selected floor should be the next destination, put the current
         // destination back in the destination list and use the selected floor
         // as the new next destination
-        } else if (this.direction == Direction.UP && floorID > currentFloor && floorID < destination && btnDirection == Direction.UP) {
+        } else if (this.direction == Direction.UP && floorID > currentFloor && floorID < destination) {
             destinationList.addDestination(destination, currentFloor, Direction.NULL);
             destination = floorID;
-        } else if (this.direction == Direction.DOWN && floorID < currentFloor && floorID > destination && btnDirection == Direction.DOWN) {
+        } else if (this.direction == Direction.DOWN && floorID < currentFloor && floorID > destination) {
             destinationList.addDestination(destination, currentFloor, Direction.NULL);
             destination = floorID;
         } else {
