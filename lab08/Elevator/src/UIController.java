@@ -98,7 +98,8 @@ public class UIController implements UIControllerInterface {
     @Override
     public void callUp(int floor) {
         // TODO: Improve this for a bonus
-        sys.floors[floor].callButton.callElevator(Direction.DIRECTION.UP);
+        sys.callElevator(floor, Direction.DIRECTION.UP);
+//        sys.floors[floor].callButton.callElevator(Direction.DIRECTION.UP);
     }
 
     /**
@@ -115,7 +116,8 @@ public class UIController implements UIControllerInterface {
     @Override
     public void callDown(int floor) {
         // TODO: Improve this for a bonus
-        sys.floors[floor].callButton.callElevator(Direction.DIRECTION.DOWN);
+        sys.callElevator(floor, Direction.DIRECTION.DOWN);
+//        sys.floors[floor].callButton.callElevator(Direction.DIRECTION.DOWN);
     }
 
     /**
@@ -132,6 +134,7 @@ public class UIController implements UIControllerInterface {
     @Override
     public void selectFloor(int floor) {
         // TODO: Improve this for a bonus
-        sys.elevator.buttons[floor].selectFloor();
+        sys.addFloor(floor);
+//        sys.elevator.buttons[floor].selectFloor();
     }
 }
