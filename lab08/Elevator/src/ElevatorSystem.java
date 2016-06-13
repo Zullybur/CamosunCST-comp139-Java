@@ -19,6 +19,7 @@ public class ElevatorSystem implements CallElevatorSystemInterface {
      * Cleanup: N/A<br>
      *
      * @param numFloors the number of Floors to create
+     * @param controller
      * @throws IllegalArgumentException if the number of Floors is less than 2
      *
      * @see Elevator
@@ -65,7 +66,7 @@ public class ElevatorSystem implements CallElevatorSystemInterface {
         if (floor < 0 || floor >= floors.length || floor == elevator.getCurrentFloor()) {
             throw new IllegalArgumentException();
         }
-
+        
         floorList.put(floor, floor);
         floors[elevator.getCurrentFloor()].departFloor();
 
@@ -100,6 +101,33 @@ public class ElevatorSystem implements CallElevatorSystemInterface {
     }
 
     /**
+     * Check a call button state for a given direction.
+     * 
+     * Precondition: N/A<br>
+     * Postcondition: N/A<br>
+     * Cleanup: N/A<br>
+     * 
+     * @param floor is the floor to get the button for
+     * @param dir is the direction to check, must be UP or DOWN
+     * @return true if the button is lit, false if the button is not lit
+     * @throws IllegalArgumentException if floor is out of range or direction is invalid
+     */
+    @Override
+    public boolean checkButton(int floor, Direction.DIRECTION dir) throws IllegalArgumentException {
+        if (floor < 0 || floor >= floors.length) {
+            throw new IllegalArgumentException();
+        }
+        
+        if (dir == Direction.DIRECTION.DOWN) {
+            return floors[floor].getCallButtonInterface().getDownLit();
+        } else if (dir == Direction.DIRECTION.UP) {
+            return floors[floor].getCallButtonInterface().getUpLit();
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+    
+    /**
      * Computes the next Floor to visit<br>
      *
      * Precondition: N/A<br>
@@ -121,7 +149,7 @@ public class ElevatorSystem implements CallElevatorSystemInterface {
 
         if (dir == Direction.DIRECTION.UP) {
             // Does current floor still need servicing in this direction?
-            if (floors[currentFloor].callButton.isUpLit) {
+            if (floors[currentFloor].getCallButtonInterface().getUpLit()) {
                 nextFloor = currentFloor;
             } else {
                 // We are headed up, can we go any higher?
@@ -136,7 +164,7 @@ public class ElevatorSystem implements CallElevatorSystemInterface {
         }
 
         // Does current floor still need servicing in this direction?
-        if (floors[currentFloor].callButton.isDownLit) {
+        if (floors[currentFloor].getCallButtonInterface().getDownLit()) {
                 nextFloor = currentFloor;
         } else {
         // We are going down, can we go any lower?
@@ -153,7 +181,21 @@ public class ElevatorSystem implements CallElevatorSystemInterface {
     }
 
     /**
-     * Gets the next Floor<br>
+     * Get the current direction<br>
+     * 
+     * Precondition: N/A<br>
+     * Postcondition: N/A<br>
+     * Cleanup: N/A<br>
+     * 
+     * @return the elevator's direction, UP or DOWN
+     */
+    @Override
+    public Direction.DIRECTION getDir() {
+        return dir;
+    }
+    
+    /**
+     * Gets the next Floor.<br>
      *
      * Precondition: N/A<br>
      * Postcondition: N/A<br>
@@ -163,9 +205,36 @@ public class ElevatorSystem implements CallElevatorSystemInterface {
      */
     @Override
     public int getNextFloor() {
+        computeNextFloor();
         return nextFloor;
     }
 
+    /**
+     * Gets an interface to the selectFloor method of an elevator.
+     * 
+     * Precondition: N/A<br>
+     * Postcondition: N/A<br>
+     * Cleanup: N/A<br>
+     * 
+     * @return a CallElevatorInterface object
+     */
+    public CallElevatorInterface getCallElevatorInterface() {
+        return (CallElevatorInterface)elevator;
+    }
+    
+    /**
+     * Get an array of floors with callElevator and getID methods.
+     * 
+     * Precondition: N/A<br>
+     * Postcondition: N/A<br>
+     * Cleanup: N/A<br>
+     * 
+     * @return 
+     */
+    public CallFloorInterface[] getCallFloorInterface() {
+        return this.floors;
+    }
+    
     /**
      * Removes a Floor from the list of scheduled Floors<br>
      *
@@ -186,12 +255,12 @@ public class ElevatorSystem implements CallElevatorSystemInterface {
             throw new IllegalArgumentException();
         }
 
-        //Remove up call if moving up
-        if (this.dir == Direction.DIRECTION.UP) {
+        // Remove up call if moving up
+        if (this.dir == Direction.DIRECTION.UP && checkButton(floor, Direction.DIRECTION.UP)) {
             floors[floor].arrivedAtFloor(Direction.DIRECTION.UP);
         }
 //        Remove down call if moving down
-        if (this.dir == Direction.DIRECTION.DOWN) {
+        if (this.dir == Direction.DIRECTION.DOWN && checkButton(floor, Direction.DIRECTION.DOWN)) {
             floors[floor].arrivedAtFloor(Direction.DIRECTION.DOWN);
         }
         

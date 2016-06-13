@@ -68,8 +68,22 @@ public class Floor implements CallFloorInterface, GetIDInterface {
     @Override
     public void callElevator(Direction.DIRECTION dir) {
         if (system != null) {
+            callButton.callElevator(dir);
             system.callElevator(id, dir);
         }
+    }
+    
+    /**
+     * Get a callButton that can be used to check the state of the lights.
+     * 
+     * Precondition: N/A<br>
+     * Postcondition: N/A<br>
+     * Cleanup: N/A<br>
+     * 
+     * @return a callButton with getUpLit() and getDownLit() methods
+     */
+    public CheckCallButtonInterface getCallButtonInterface() {
+        return callButton;
     }
 
     /**

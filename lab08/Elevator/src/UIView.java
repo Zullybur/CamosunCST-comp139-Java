@@ -286,7 +286,6 @@ public class UIView extends JFrame {
         }
         callUpButtons[numFloors - 1].setVisible(false);
         callUpIcon[numFloors - 1].setVisible(false);
-        // TODO callDownButtons
         callDownButtons[0].setVisible(false);
         callDownIcon[0].setVisible(false);
 
