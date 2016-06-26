@@ -8,6 +8,8 @@ public class UIController implements UIControllerInterface {
     protected int numFloors;
     protected ElevatorSystem sys;
     protected UIView view;
+    protected CallElevatorInterface e;
+    protected CallFloorInterface floors[];
 
     /**
      * Sets up the UIController<br>
@@ -23,6 +25,8 @@ public class UIController implements UIControllerInterface {
         this.numFloors = numFloors;
         sys = new ElevatorSystem(numFloors, this);
         this.view = view;
+        this.e = sys.getCallElevatorInterface();
+        this.floors = sys.getCallFloorInterface();
 
         int delay = 500; //milliseconds
         ActionListener taskPerformer = new ActionListener() {
@@ -98,7 +102,8 @@ public class UIController implements UIControllerInterface {
     @Override
     public void callUp(int floor) {
         // TODO: Improve this for a bonus
-        sys.floors[floor].callButton.callElevator(Direction.DIRECTION.UP);
+        floors[floor].callElevator(Direction.DIRECTION.UP);
+//        sys.floors[floor].callButton.callElevator(Direction.DIRECTION.UP);
     }
 
     /**
@@ -115,7 +120,8 @@ public class UIController implements UIControllerInterface {
     @Override
     public void callDown(int floor) {
         // TODO: Improve this for a bonus
-        sys.floors[floor].callButton.callElevator(Direction.DIRECTION.DOWN);
+        floors[floor].callElevator(Direction.DIRECTION.DOWN);
+//        sys.floors[floor].callButton.callElevator(Direction.DIRECTION.DOWN);
     }
 
     /**
@@ -132,6 +138,7 @@ public class UIController implements UIControllerInterface {
     @Override
     public void selectFloor(int floor) {
         // TODO: Improve this for a bonus
-        sys.elevator.buttons[floor].selectFloor();
+        e.selectFloor(floor);
+//        sys.elevator.buttons[floor].selectFloor();
     }
 }

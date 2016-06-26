@@ -1,5 +1,5 @@
 
-public class CallButton {
+public class CallButton implements CheckCallButtonInterface {
 
     protected boolean isDownLit, isUpLit;
     protected CallFloorInterface floor;
@@ -40,9 +40,9 @@ public class CallButton {
      */
     public void callElevator(Direction.DIRECTION dir) {
         setLit(dir, true);
-        if (floor != null) {
-            floor.callElevator(dir);
-        }
+//        if (floor != null) {
+//            floor.callElevator(dir);
+//        }
     }
 
     /**
@@ -54,6 +54,7 @@ public class CallButton {
      *
      * @return true if the down button is lit, false otherwise
      */
+    @Override
     public boolean getDownLit() {
         return isDownLit;
     }
@@ -67,6 +68,7 @@ public class CallButton {
      *
      * @return true if the up button is lit, false otherwise
      */
+    @Override
     public boolean getUpLit() {
         return isUpLit;
     }

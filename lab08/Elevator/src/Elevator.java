@@ -1,4 +1,3 @@
-
 public class Elevator implements CallElevatorInterface, GetIDInterface {
 
     protected CallElevatorSystemInterface sys;
@@ -76,7 +75,11 @@ public class Elevator implements CallElevatorInterface, GetIDInterface {
             currentFloor--;
         }
 
-        if (currentFloor == nextFloor) {
+        if (currentFloor == nextFloor && 
+                (buttons[currentFloor].isLit || (
+                    sys.checkButton(currentFloor, Direction.DIRECTION.UP) && sys.getDir() == Direction.DIRECTION.UP ||
+                    sys.checkButton(currentFloor, Direction.DIRECTION.DOWN) && sys.getDir() == Direction.DIRECTION.DOWN)
+                )){
             door.openDoor();
             buttons[currentFloor].setLit(false);
             if (sys != null) {
